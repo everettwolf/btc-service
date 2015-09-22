@@ -1,0 +1,74 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'application'
+apply plugin: 'maven'
+
+mainClassName = "com.btc.web.Application"
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+compileJava {
+     allprojects {
+          tasks.withType(JavaCompile) {
+               options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+          }
+     }
+}
+
+buildscript {
+     repositories {
+          mavenCentral()
+     }
+     dependencies {
+          classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
+     }
+}
+
+
+ext {
+     springBootVersion = "1.2.2.RELEASE"
+     springSecurityVersion = "3.2.4.RELEASE"
+     plexusCoreVersion = "1.0"
+     janinoVersion = "2.7.5"
+     mysqlConnectorVersion = "5.1.8"
+     commonsDbcpVersion = "1.4"
+     guavaVersion = "18.0"
+     lombokVersion = "1.12.6"
+     commonsIOVersion = "2.4"
+}
+
+repositories {
+     mavenCentral()
+     mavenLocal()
+
+}
+
+dependencies {
+     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion", {
+          exclude group: "org.apache.tomcat.embed"
+     }
+     compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
+          exclude group: "org.apache.tomcat.embed"
+     }
+     compile "org.springframework.security:spring-security-core:$springSecurityVersion"
+     compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+
+
+     compile "org.codehaus.janino:janino:$janinoVersion"
+
+     // database
+     compile "commons-dbcp:commons-dbcp:$commonsDbcpVersion"
+     compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+     compile "jave:jave:1.0.2"
+
+     //Guava
+     compile "com.google.guava:guava:$guavaVersion"
+
+     compile "org.projectlombok:lombok:$lombokVersion"
+
+     compile "commons-io:commons-io:$commonsIOVersion"
+}

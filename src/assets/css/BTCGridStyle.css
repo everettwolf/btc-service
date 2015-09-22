@@ -1,0 +1,658 @@
+/*@font-face {
+  font-family: 'Permanent Marker';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Permanent Marker'), local('PermanentMarker'), url(http://fonts.gstatic.com/s/permanentmarker/v5/9vYsg5VgPHKK8SXYbf3sMio-5Z6V1O0VBgfXWFfbB4c.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}*/
+@import url(http://fonts.googleapis.com/css?family=Oswald);
+html,body{
+    width: 100%;
+    height: 100%;
+}
+#btc-kf-wrapper {
+    position: relative;
+    display: inline-block;
+    background-color:#f2f1ef;
+    width: auto;
+    height: auto;
+    padding: 10px 10px 10px 10px;
+    max-width: 1000px;
+}
+#btc-kf-banner {
+    margin: 0 12px 20px 12px;
+}
+#btc-kf-banner-block {
+    position: relative;
+    background-color: #FFFFFF;
+    border-top: 4px solid #360B5E;
+    height: 41px;
+    margin-bottom: 40px;
+}
+#btc-kf-left-dot {
+    position: absolute;
+    background-image: url(http://v4.comicskingdom.net/assets/widget/ui-38bae65e50cdc04532d8401067685470.png);
+    height: 10px;
+    left: -7px;
+    top: -7px;
+    width: 10px;
+}
+#btc-kf-right-dot {
+    position: absolute;
+    background-image: url(http://v4.comicskingdom.net/assets/widget/ui-38bae65e50cdc04532d8401067685470.png);
+    height: 10px;
+    right: -7px;
+    top: -7px;
+    width: 10px;
+}
+#btc-kf-logo {
+    background-image: url(http://v4.comicskingdom.net/assets/widget/large/ui-52b7fe0e7a4dafe02a7ce38e88c35698.png);
+    height: 67px;
+    left: 10px;
+    position: absolute;
+    text-align: left;
+    top: -7px;
+    width: 222px;
+}
+#btc-kf-pre-content {
+    position: relative;
+    display: inline-block;
+    height: 270px;
+    width: 100%;
+    margin: 0 12px 0 12px;
+}
+#btc-kf-ad {
+    float: left;
+    display: inline-block;
+    margin: 0 10px 20px 0;
+    height: 250px;
+    width: 300px;
+}
+#btc-kf-ad ins {
+    background-color: #e4ce99;
+}
+#btc-kf-pre-block-content {
+    overflow: hidden;
+    background-color: #FFFFFF;
+    height: auto;
+    margin: 0 24px 20px 0px;
+    min-width: 190px;
+}
+#btc-kf-pre-block-content-head {
+    border-top: 3px solid #360B5E;
+    padding: 10px 10px 10px 10px;
+    position: relative;
+}
+#btc-kf-pre-block-content-head h3 {
+    margin: 0;
+    display: inline !important;
+    vertical-align: text-top;
+    line-height: 16px;
+    font-family: Oswald, sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+}
+#btc-kf-pre-block-content-body {
+    border-top: 1px solid #E7E7E7;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    line-height: 18px;
+    padding: 0 10px 10px 10px;
+}
+#btc-kf-bottom-ad {
+	position: relative;
+	display: block;
+	margin: 0 auto;
+	width: 532px;
+	height: 102px;
+	padding: 15px 0 15px 0;
+	background: url("/assets/img/placeholder.png") no-repeat 15px;
+}
+#btc-kf-footer {
+    position: relative;
+    height: 153px;
+}
+#btc-kf-footer img {
+    display: block;
+    margin: 0 auto;
+    max-width:100%;
+}
+#btc-kf-footer-info {
+    background-color: #360B5E;
+    background-origin: padding-box;
+    background-size: auto;
+    color: #FFFFFF;
+    display: block;
+    font-family: arial, sans-serif;
+    font-size: 11px;
+    height: 39px;
+    line-height: 15px;
+    margin-bottom: 20px;
+    padding: 20px 27px 40px 27px;
+}
+#btc-kf-footer-info #kingfeatures {
+    display: inline-block !important;
+    width: 143px;
+    height: 24px;
+    margin-right: 10px;
+    text-indent: -9999px;
+    background: url("http://v4.comicskingdom.net/assets/widget/ui-38bae65e50cdc04532d8401067685470.png") no-repeat 0 -60px;
+    vertical-align: bottom;
+}
+#btc-kf-footer-info a {
+    text-decoration:none;
+    color:#fff !important;
+}
+#btc-grid-widget {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    clear: both;
+}
+#btc-main-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color:#e4ce99;
+}
+#btc-edge-top {
+    float:left;
+    margin-top: -7px;
+    background: url("/assets/img/edge-top-trans.png") repeat-x top left;
+    height:10px;
+    width:100%;
+    display:inline-block;
+}
+#btc-film-strip {
+    position: absolute;
+    display:inline-block;
+    left:0;
+    top:50%;
+    width:100%;
+    height:20%;
+    background:#d5bc78;
+}
+.dot {
+    margin:7px 0;
+    width:100%;
+    height:10%;
+    left:0;
+    display:inline-block;
+    background:url("/assets/img/filmstrip-dot.png") repeat-x top left;
+}
+.dot-top {
+    position:absolute;
+    top:0;
+}
+.dot-bottom {
+    position: absolute;
+    bottom:0;
+}
+#btc-main {
+    position: relative;
+    clear:both;
+    margin: auto;
+    display: inline-block;
+    text-align:left;
+    z-index:0;
+    width: 100%;
+    height: auto;
+}
+#btc-top-header {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+#btc-logo {
+	float: left;
+    display: inline-block;
+    width: 40%;
+    height: 100%;
+    text-align: center;
+}
+#logo {
+    position:absolute;
+    margin: 10px 10px 10px 10px;
+    display:inline-block;
+    left: -15%;
+    z-index:-10;
+}
+#logo img {
+    /* logo is 179x96 */
+    max-width: 100%;
+    height: auto;
+}
+/*#logo {
+    /* logo is 179x96 */
+    float: left;
+    display: inline-block;
+    margin: 0 2% 0% 2%;
+    width: 100%;
+    height: 100%;
+}
+#logo img {
+    max-width: 100%;
+    height: auto;
+}
+#pagetitle {
+    float: left;
+    display: inline-block;
+    width: 58%;
+    height: 100%;
+    text-align: center;
+}
+#pageblurb {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    color:#493505;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+}
+#playerinfo {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+    display: none;
+}
+#comictitle {
+    position: relative;
+    font-size:30px;
+    color:#ff6600;
+    line-height: 25px;
+}
+#comictalent {
+    position: relative;
+    font-size:20px;
+    font-weight:400;
+    color:#493505;
+    width: 100%;
+    line-height: 20px;
+}
+#btc-content {
+    position: relative;
+    display: inline-block;
+    height: auto;
+    margin: 0 1% 0 1%;
+}
+.btc-new-today {
+    position: absolute;
+    background-color: #FF6600;
+    font-size: 17px;
+    color: white;
+    width: 99px;
+    height 23px;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+    text-align: center;
+}
+.featured {
+    float:left;
+    position: relative;
+    display:inline-block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 0 0;
+}
+.featured .vid-item {
+    float:left;
+    margin: 15px 0 0 0;
+    height:auto;
+    text-decoration:none;
+}
+.featured .vid-item img {
+    float: left;
+    width: 100%;
+    height: auto;
+}
+.featured .caption {
+    float: left;
+    background: #fff;
+    width: 100%;
+    height: auto;
+    min-height: 70px;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+}
+.featured .title {
+    float: left;
+    width: 92%;
+    height: auto;
+    margin: 2% 2% 0 4%;
+    color:#ff6600;
+    font-size:16px;
+    line-height:16px;
+}
+.featured .title .joke{
+	display: inline;
+	margin-left: 5px;
+    color:#808080;
+}
+.featured .voice {
+    float: left;
+    width: 92%;
+    height: auto;
+    margin: auto 4% 4% 4%;
+    color:#000;
+    font-size:20px;
+    line-height:20px;
+}
+.regular {
+    float:left;
+    position: relative;
+    display:inline-block;
+    width: 100%;
+    height: auto;
+    margin: 0 0 0 0;
+}
+.regular .vid-item {
+    float:left;
+    margin: 15px 0 0 0;
+    height: auto;
+    text-decoration:none;
+}
+.regular .vid-item img {
+    float: left;
+    width:100%;
+    height:auto;
+}
+.regular .caption {
+    float: left;
+    background: #fff;
+    width: 100%;
+    height: 70px;
+    min-height: 70px;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+
+}
+.regular .title {
+    float: left;
+    width: 92%
+    height: auto;
+    margin: 4% 4% 0 4%;
+    color:#ff6600;
+    font-size:16px;
+    line-height:16px;
+}
+.regular .voice {
+    float: left;
+    width: 92%;
+    height: auto;
+    margin: auto 4% 4% 4%;
+    color:#000;
+    font-size:20px;
+    line-height:20px;
+}
+.regular .btc-ad-unit-small {
+    float:left;
+    margin: 15px 0 0 0;
+    height: auto;
+    min-width: 195px;
+    min-height: 180px;
+    background-color:#f2dfad;
+    text-align:center;
+}
+.btc-ad-unit-small .ad-caption {
+    margin-top:5px;
+    margin-bottom:5px;
+    font:11px Arial;
+    color: #a99a74;
+}
+.btc-colspace {
+    float: left;
+    display: inline-block;
+    width: 2%;
+    height: 15px;
+}
+.playlist {
+    display: none;
+    font-family: arial;
+}
+#btc-player {
+	position: relative;
+    height: auto;
+    width: 98%;
+    display: none;
+    margin: 0 1% 0 1%;
+}
+#btc-playerContainer {
+	position: relative;
+	display: inline-block;
+    margin: 0 auto;
+    width: 620px;
+    height: 500px;
+}
+#btc-playerad {
+	display: block;
+	position: relative;
+    background-color: #e4ce99;
+    width: 336px;
+    height: 280px;
+    margin: 0 auto;
+}
+#btc-playerad ins {
+    background-color: #e4ce99;
+}
+#PlaylistsPlayerWrapper-btc-playerContainer #oo-see-more {
+    font-family:'Permanent Marker', cursive;
+    font-size: 14px;
+    color: #333433;
+    margin: 0px 0px 10px 10px;
+}
+#PlaylistsPlayerWrapper-btc-playerContainer .oo-caption-description {
+    display: block;
+    height:5em;
+    color:#000;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+    font-size:1.1em;
+}
+#btc-playerContainer #PlaylistsPlayerWrapper-btc-playerContainer .oo-thumbnail-caption {
+    height: 5em;
+    color:#999;
+    padding:10px;
+    background-color:#f6f1e7;
+}
+#btc-playerContainer #PlaylistsPlayerWrapper-btc-playerContainer .oo-caption-duration {
+    font-size:11px;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+}
+#btc-playerContainerBottom {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 32px;
+    text-align: center;
+    margin: 15px 0 15px 0;
+}
+#moreComicsButton, #moreComicsButton:hover {
+    background-image: url('/assets/img/btcMoreComicsBtnBg.png');
+    background-repeat: no-repeat;
+    display: block;
+    background-position: center top;
+    transition-duration: 0s;
+    height: 32px;
+}
+#moreComicsButton:hover {
+    background-position: center bottom;
+}
+#btc-footer {
+	position: relative;
+    background:#e3ce98;
+    height:80px;
+    width:100%;
+    display:inline-block;
+}
+#footer-links {
+    display:inline-block;
+    float:center;
+    margin-top:1em;
+    font-size:16px;
+    color:#b3a379;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    text-align: center;
+    width:100%;
+}
+#footer-links a {
+    color:#b3a379;
+    text-decoration:none;
+    margin-right:30px;
+}
+#footer-links a:hover {
+    border-bottom:3px solid #b3a379;
+}
+#footer-links a.last {
+    margin-right:0;
+}
+#copyright {
+    width:300px;
+    margin-left:25px;
+    display:inline-block;
+    float:left;
+    margin-top:1em;
+    font-size:12px;
+    color:#c2af7c;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+    letter-spacing: 1px;
+}
+#btc-edge-bottom {
+    background: url("/assets/img/edge-bottom-trans.png") repeat-x bottom left;
+    height:10px;
+    width:100%;
+    float:left;
+    margin-top: -3px;
+}
+ins {
+    text-decoration: none;
+}
+#btc-archive{
+	position: relative;
+	display: inline-block;
+	margin: 0 1% 0 1%;
+	width: 98%;
+	height: 110px;
+}
+#btc-navigation{
+	position: relative;
+	display: inline-block;
+	height: 30px;
+	width: 100%;
+}
+#btc-more-comics{
+	float: left;
+	font-size:16px;
+	width: 45%;
+	line-height: 26px;
+    color: #ff6600;
+    font-family:'Permanent Marker', cursive;
+    text-transform: lowercase;
+}
+#btc-navigate-text{
+	float: left;
+	font-size:10px;
+	margin-right: 2%;
+	width: 43%;
+	line-height: 26px;
+    color: black;
+    font-family:'Arial';
+    text-align: right;
+}
+#btc-navigate-arrows{
+	float: right;
+	width: 10%;
+	white-space: nowrap;
+}
+#btc-archive-container{
+	position: relative;
+	/*top: -20px;
+	left: 0px; */
+	width: 640px;
+	height: 113.66;
+	/*overflow: hidden;*/
+}
+#btc-slides{
+	cursor: pointer;
+	position: absolute;
+	left: 0px;
+	top: 28px;
+	width: 640px;
+	height: 85.66px;
+	/*overflow: hidden;*/
+}
+/**********
+BTC Slider Styles
+**********/
+/* jssor slider bullet navigator skin 03 css */
+
+/*
+    .jssorb03 div           (normal)
+    .jssorb03 div:hover     (normal mouseover)
+    .jssorb03 .av           (active)
+    .jssorb03 .av:hover     (active mouseover)
+    .jssorb03 .dn           (mousedown)
+ */
+ .jssorb03 div, .jssorb03 div:hover, .jssorb03 .av {
+    background: url(/assets/img/b03.png) no-repeat;
+    overflow:hidden;
+    cursor: pointer;
+}
+.jssorb03 div {
+    background-position: -5px -4px;
+}
+.jssorb03 div:hover, .jssorb03 .av:hover {
+    background-position: -35px -4px;
+}
+.jssorb03 .av {
+    background-position: -65px -4px;
+}
+.jssorb03 .dn, .jssorb03 .dn:hover {
+    background-position: -95px -4px;
+}
+/* jssor slider arrow navigator skin 03 css */
+
+/*
+            .jssora03l              (normal)
+            .jssora03r              (normal)
+            .jssora03l:hover        (normal mouseover)
+            .jssora03r:hover        (normal mouseover)
+            .jssora03ldn            (mousedown)
+            .jssora03rdn            (mousedown)
+            */
+ .jssora03l, .jssora03r, .jssora03ldn, .jssora03rdn {
+    float: left;
+    cursor: pointer;
+    display: block;
+    background: url(/assets/img/small_nav.png) no-repeat;
+    overflow:hidden;
+
+}
+.jssora03l {
+    background-position: -2px -17px;
+}
+.jssora03r {
+    background-position: -32px -17px;
+}
+.jssora03l:hover {
+    background-position: -62px -17px;
+}
+.jssora03r:hover {
+    background-position: -92px -17px;
+}
+.jssora03ldn {
+    background-position: -122px -17px;
+}
+.jssora03rdn {
+    background-position: -152px -17px;
+}
