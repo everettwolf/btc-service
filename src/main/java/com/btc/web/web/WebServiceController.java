@@ -77,10 +77,38 @@ public class WebServiceController {
      @RequestMapping(value = "getGridTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridTemplate() throws Exception {
 
-          Resource gridTemplate = new ClassPathResource("test_files/template.html");
-          StringWriter writer = new StringWriter();
-          IOUtils.copy(gridTemplate.getInputStream(), writer, Charsets.UTF_8);
-          String returnJson = writer.toString();
+          Resource headerTemplate = new ClassPathResource("test_files/header.html");
+          StringWriter header = new StringWriter();
+          IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
+
+          Resource gridTemplate = new ClassPathResource("test_files/grid_template.html");
+          StringWriter content = new StringWriter();
+          IOUtils.copy(gridTemplate.getInputStream(), content, Charsets.UTF_8);
+
+          Resource footerTemplate = new ClassPathResource("test_files/footer.html");
+          StringWriter footer = new StringWriter();
+          IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
+
+          String returnJson = header.toString() + content.toString() + footer.toString();
+          return new DataBean(returnJson);
+     }
+
+     @RequestMapping(value = "getPlayerTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
+     public DataBean getPlayerTemplate() throws Exception {
+
+          Resource headerTemplate = new ClassPathResource("test_files/header.html");
+          StringWriter header = new StringWriter();
+          IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
+
+          Resource playerTemplate = new ClassPathResource("test_files/player_template.html");
+          StringWriter content = new StringWriter();
+          IOUtils.copy(playerTemplate.getInputStream(), content, Charsets.UTF_8);
+
+          Resource footerTemplate = new ClassPathResource("test_files/footer.html");
+          StringWriter footer = new StringWriter();
+          IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
+
+          String returnJson = header.toString() + content.toString() + footer.toString();
           return new DataBean(returnJson);
      }
 
