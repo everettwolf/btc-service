@@ -1,5 +1,6 @@
 package com.btc.web.web;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import it.sauronsoftware.jave.*;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
@@ -18,6 +19,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
 
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
+
 
 /**
  * Created by Chris on 1/8/15.
@@ -27,6 +30,15 @@ import java.io.StringWriter;
 public class WebServiceController {
 
      private static Logger logger = LoggerFactory.getLogger(WebServiceController.class);
+
+     @JsonAutoDetect(fieldVisibility = ANY)
+     static class DataBean {
+          String json;
+
+          public DataBean(String str) {
+               this.json = str;
+          }
+     }
 
      @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, consumes = {"multipart/*"}, produces = MediaType.APPLICATION_JSON_VALUE)
      public String uploadVideo(@RequestPart("video") MultipartFile video) {
@@ -62,14 +74,24 @@ public class WebServiceController {
 
      }
 
-     @RequestMapping(value = "getGridInfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-     public String getGridInfo() throws Exception {
+     @RequestMapping(value = "getGridTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
+     public DataBean getGridTemplate() throws Exception {
+
+          Resource gridTemplate = new ClassPathResource("test_files/template.html");
+          StringWriter writer = new StringWriter();
+          IOUtils.copy(gridTemplate.getInputStream(), writer, Charsets.UTF_8);
+          String returnJson = writer.toString();
+          return new DataBean(returnJson);
+     }
+
+     @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+     public DataBean getGridJson() throws Exception {
 
           Resource gridJson = new ClassPathResource("test_files/grid.json");
           StringWriter writer = new StringWriter();
           IOUtils.copy(gridJson.getInputStream(), writer, Charsets.UTF_8);
           String returnJson = writer.toString();
-          return returnJson;
+          return new DataBean(returnJson);
      }
 
      private File convert(MultipartFile file) throws Exception {

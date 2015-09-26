@@ -324,8 +324,10 @@ console.log("attribs.env", attribs.env);
 		$j(window).bind("resize", scaleBTCElements);
 		$j(window).bind("orientationchange", scaleBTCElements);
 
-        getAssetInfo();
-        getArchiveInfo();
+         var xml = {"NpYWNodzpiEoSWi3paQe2fkhXz9Q6B-i":{"comic":"Joe Dirt","title":"New Sayings!","talent":"David Spade","thumb":"http:\/\/cf.c.ooyala.com\/NpYWNodzpiEoSWi3paQe2fkhXz9Q6B-i\/3Gduepif0T1UGY8H4xMDoxOjA4MTsiGN","embed_code":"/assets/videos/test","playlist_id":"/assets/videos/test","updated_at":"2015-09-11T23:02:22Z"}};
+
+        $j('#btc-archive').hide();
+       writeDivs(xml);
 
         function loadSlider(){
 			var btc_slider_options = {
@@ -557,19 +559,19 @@ console.log("attribs.env", attribs.env);
             $j('#playerinfo').show();
             $j('#pagetitle #comictitle').html(comic);
             $j('#pagetitle #comictalent').html('with ' + talent);
+            console.log(xml)
             var player =      '<video id="movie" width="640" height="360" preload controls autoplay> \
-                                   <source src="/assets/videos/test.webm" type="video/webm; codecs=vp8,vorbis" /> \
-                                   <source src="/assets/videos/test.ogv" type="video/ogg; codecs=theora,vorbis" /> \
-                                   <source src="/assets/videos/test.mp4" /> \
+                                   <source src="' + playlist_id + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
+                                   <source src="' + playlist_id + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
+                                   <source src="' + playlist_id + '.mp4" /> \
                                    <object width="640" height="360" type="application/x-shockwave-flash" data="/assets/videos/flowplayer-3.2.1.swf"> \
                                         <param name="movie" value="/assets/videos/flowplayer-3.2.1.swf" /> \
                                         <param name="allowfullscreen" value="true" /> \
-                                        <param name="flashvars" value="config={\'clip\': {\'url\': \'/assets/videos/test.mp4\', \'autoPlay\':true, \'autoBuffering\':true}}" /> \
+                                        <param name="flashvars" value="config={\'clip\': {\'url\': \'' + playlist_id + '.mp4\', \'autoPlay\':true, \'autoBuffering\':true}}" /> \
                                    </object> \
                               </video>';
            $j("#btc-playerContainer").html(player);
-           console.log("height",$j("#btc-playerContainer").height())
-           console.log("?????");
+           console.log("height",$j("#btc-playerContainer").height());
 
             $j('#moreComicsButton').click(function () {
             	playing_video = false;
