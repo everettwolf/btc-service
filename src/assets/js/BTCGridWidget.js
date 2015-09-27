@@ -44,32 +44,58 @@ console.clear();
           loadCSS('//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css');
           loadCSS('/assets/css/style.css');
 
+          var getUrlParameter = function(sParam) {
+               var sPageURL = window.location.search.substring(1);
+               var sURLVariables = sPageURL.split('&');
+               for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] == sParam) {
+                         return sParameterName[1];
+                    }
+               }
+               return '';
+          };
 
+          var redirectToBTCPage = function(url) {
+               var param = url === 'home' ? '' : '?PL=' + url + '#btc-edge-top';
+               var protocol = window.location.protocol + '//';
+               var hostname = window.location.hostname;
+               var port = window.location.port !== "" ? ":" + window.location.port : "";
+               var pathname = window.location.pathname;
+               url = protocol + hostname + port + pathname + param;
+               window.location.replace(url);
+          };
 
           var loadGridPropertiesSuccess = function(json) {
-               console.log("ok");
+
                var i = 1;
                $j.each(json, function(key, val) {
                     console.log(val);
-                    var img = '<img src="' + val.thumb + '" alt="Beyond the Comics"/>';
+                    var img = '<img src="' + val.thumb + '" alt="' + val.comic + '"/>';
                     var title = val.comic;
                     var joke = "";
                     var voice = val.talent;
                     var slide = img +
-                         "<div class='caption' >" +
-                         "<div class='title'>" + title +
+                         "<div class='caption'>" +
+                         "<div class='title'>" + val.comic +
                          "<div class='joke'>" + joke + "</div>" +
                          "</div>" +
-                         "<div class='voice'>" + voice + "</div>" +
+                         "<div class='voice'>" + val.talent + "</div>" +
                          "<div id='playlist1' class='playlist'>2c0aa6d110ca49738916789459b4bb53</div>" +
                          "</div>";
                     $j("#vid-item" + i).html(slide);
+
+                    var vid = "#vid-item" + i;
+
+                    console.log("playlist", val.playlist_id);
+                    $j('#btc-content').on('click', vid, function() {
+                         redirectToBTCPage(val.playlist_id);
+                    });
+
                     i++;
                });
 
-               $j('#test').click(function() {
-                    alert("clicked");
-               });
+
           };
           var loadGridPropertiesFailure = function(data) {
                console.log("Error loading grid", data);
@@ -86,6 +112,7 @@ console.clear();
 
           var loadGridTemplateSuccess = function(json) {
                $j('#btc_container').html(json);
+               $j('#pageblurb').html("New! Cartoon Shorts")
                loadGridProperties();
           };
           var loadGridTemplateFailure = function(data) {
@@ -109,7 +136,48 @@ console.clear();
                               </video>';
                $j("#btc-playerContainer").html(player);
           };
+          var loadPlayerTemplateSuccess = function(json) {
+               $j('#btc_container').html(json);
+               $j('#pagetitle #comictitle').html('This Just In');
+               $j('#pagetitle #comictalent').html('with ' + 'Dana Carvey');
 
-          loadGridTemplate();
+               $j('#moreComicsButton').click(function() {
+                    redirectToBTCPage('home');
+               });
+               loadPlayer();
+          };
+          var loadPlayerTemplateFailure = function(data) {
+               console.log("Error loading template", data);
+          };
+          var loadPlayerTemplate = function() {
+               var playerTemplateUrl = "http://localhost:8001/btc-svc/ws/getPlayerTemplate?callback=?";
+               $j.getJSON(playerTemplateUrl, function(data) {
+                         loadPlayerTemplateSuccess(data.json);
+                    })
+                    .fail(function(data) {
+                         loadPlayerTemplateFailure(data);
+                    });
+          };
+          console.log(getUrlParameter("PL"));
+          //Remote Calls
+          if (getUrlParameter("PL") === '') {
+               loadGridTemplate();
+          } else {
+               loadPlayerTemplate();
+          }
+
+
+          //Local Calls
+          // $j('#btc_container').load("grid_template.html", function() {
+          //      $j.getJSON("grid.json", function(json) {
+          //           console.log(json); // this will show the info it in firebug console
+          //           loadGridPropertiesSuccess(json);
+          //      });
+          // });
+          // $j('#btc_container').load("player_template.html", function() {
+          //      $j.getJSON("grid.json", function(json) {
+          //           loadPlayer('json');
+          //      });
+          // });
      });
 })();
