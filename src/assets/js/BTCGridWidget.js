@@ -1,18 +1,42 @@
-console.clear();
 (function() {
-     var script;
+
+    var SCRIPT_ID = 'BTCGridWidget'; //this has to match what is given out
+
+    //Load attributes
+    var attribs = {env:null,pl:null,style:null,ws:null};
+
+    //Attribute overrides
+    if(!attribs.pl) attribs.pl = "12345";
+    if(!attribs.style) attribs.style = 'default';
+
+    var errors = new Array;
+    for(var key in attribs){
+          attribs[key] = attribs[key] ? attribs[key] : document.getElementById(SCRIPT_ID).getAttribute('data-' + key);
+          if(!attribs[key]) errors.push('data-' + key);
+    }
+    if(errors.length > 0) {
+          var divId = 'btc-grid-widget';
+          var html = 'The following attribute(s) for the BTC Widget is(are) missing or invalid:<p/><p/>' + errors.join(', ') +
+                         '<p/><b>Please copy this and put it in a request for an updated widget string to embed, with the proper attributes.</b>' +
+                         '<p/>Thank You!  ;-)<br/>The BTC Team';
+          var div = document.createElement('div');
+          div.id=divId;
+          var widget = document.getElementById(SCRIPT_ID);
+          widget.parentNode.insertBefore(div,widget);
+          document.getElementById(divId).innerHTML = html;
+          return;
+    }
 
      //Load jQuery
-     script = document.createElement('SCRIPT');
-     script.src = '//code.jquery.com/jquery-1.10.2.js';
+     var script = document.createElement('SCRIPT');
+     script.src = attribs.env + '/assets/js/jquery.min.js';
      script.type = 'text/javascript';
      document.getElementsByTagName("head")[0].appendChild(script);
 
      var checkReady = function(callback) {
-          if (window.jQuery && window.jQuery.fn.jquery >= '1.10.2') {
+          if (window.jQuery && window.jQuery.fn.jquery >= '2.1.4') {
                callback(true);
           } else {
-               console.log("polling");
                window.setTimeout(function() {
                     checkReady(callback);
                }, 100);
@@ -20,14 +44,12 @@ console.clear();
      };
 
      checkReady(function($) {
-          console.log("ready");
-
           //Bootstrap the initial div into the DOM
           var $d = document;
           var $j = jQuery.noConflict();
           var container_div = $d.createElement('div');
           container_div.id = 'btc_container';
-          var content = $d.getElementById("BTC");
+          var content = $d.getElementById(SCRIPT_ID);
           content.parentNode.insertBefore(container_div, content);
 
           //Load Stylesheets
@@ -41,8 +63,8 @@ console.clear();
                });
           };
           //bootstrap css
-          loadCSS('//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css');
-          loadCSS('/assets/css/style.css');
+          loadCSS(attribs.env + '/assets/css/style.css');
+          loadCSS(attribs.env + '/assets/fonts/permanent-marker.css');
 
           var getUrlParameter = function(sParam) {
                var sPageURL = window.location.search.substring(1);
@@ -50,14 +72,14 @@ console.clear();
                for (var i = 0; i < sURLVariables.length; i++) {
                     var sParameterName = sURLVariables[i].split('=');
                     if (sParameterName[0] == sParam) {
-                         return sParameterName[1];
+                         return decodeURIComponent(sParameterName[1]);
                     }
                }
                return '';
           };
 
-          var redirectToBTCPage = function(url) {
-               var param = url === 'home' ? '' : '?PL=' + url + '#btc-edge-top';
+          var redirectToBTCPage = function(url,comic,talent) {
+               var param = url === 'home' ? '' : '?PL=' + url + '&C=' + encodeURIComponent(comic) + '&T=' + encodeURIComponent(talent) + '#btc-edge-top';
                var protocol = window.location.protocol + '//';
                var hostname = window.location.hostname;
                var port = window.location.port !== "" ? ":" + window.location.port : "";
@@ -67,41 +89,32 @@ console.clear();
           };
 
           var loadGridPropertiesSuccess = function(json) {
-
                var i = 1;
                $j.each(json, function(key, val) {
-                    console.log(val);
-                    var img = '<img src="' + val.thumb + '" alt="' + val.comic + '"/>';
-                    var title = val.comic;
+                    var img = '<img src="' + attribs.env + '/' + val.thumb + '.png" alt="' + val.comic + '"/>';
                     var joke = "";
-                    var voice = val.talent;
                     var slide = img +
                          "<div class='caption'>" +
                          "<div class='title'>" + val.comic +
                          "<div class='joke'>" + joke + "</div>" +
                          "</div>" +
                          "<div class='voice'>" + val.talent + "</div>" +
-                         "<div id='playlist1' class='playlist'>2c0aa6d110ca49738916789459b4bb53</div>" +
                          "</div>";
                     $j("#vid-item" + i).html(slide);
 
                     var vid = "#vid-item" + i;
 
-                    console.log("playlist", val.playlist_id);
                     $j('#btc-content').on('click', vid, function() {
-                         redirectToBTCPage(val.playlist_id);
+                         redirectToBTCPage(val.embed_code,val.comic,val.talent);
                     });
-
                     i++;
                });
-
-
           };
           var loadGridPropertiesFailure = function(data) {
                console.log("Error loading grid", data);
           };
           var loadGridProperties = function() {
-               var gridJsonUrl = "http://localhost:8001/btc-svc/ws/getGridJson?callback=?";
+               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getGridJson?callback=?";
                $j.getJSON(gridJsonUrl, function(data) {
                          loadGridPropertiesSuccess($j.parseJSON(data.json));
                     })
@@ -119,7 +132,7 @@ console.clear();
                console.log("Error loading template", data);
           };
           var loadGridTemplate = function() {
-               var gridTemplateUrl = "http://localhost:8001/btc-svc/ws/getGridTemplate?callback=?";
+               var gridTemplateUrl = attribs.ws + "/btc-svc/ws/getGridTemplate?callback=?";
                $j.getJSON(gridTemplateUrl, function(data) {
                          loadGridTemplateSuccess(data.json);
                     })
@@ -128,18 +141,17 @@ console.clear();
                     });
           };
           var loadPlayer = function() {
-               var playlist_id = 'http://dev.beyondthecomics.com/videos/test';
-               var player = '<video id="movie" preload controls autoplay> \
-                                   <source src="' + playlist_id + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
-                                   <source src="' + playlist_id + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
-                                   <source src="' + playlist_id + '.mp4" /> \
+               var player = '<video id="movie" preload controls=true autoplay> \
+                                   <source src="' + attribs.env + PL + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
+                                   <source src="' + attribs.env + PL + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
+                                   <source src="' + attribs.env + PL + '.mp4" /> \
                               </video>';
                $j("#btc-playerContainer").html(player);
           };
           var loadPlayerTemplateSuccess = function(json) {
                $j('#btc_container').html(json);
-               $j('#pagetitle #comictitle').html('This Just In');
-               $j('#pagetitle #comictalent').html('with ' + 'Dana Carvey');
+               $j('#pagetitle #comictitle').html(C);
+               $j('#pagetitle #comictalent').html('with ' + T);
 
                $j('#moreComicsButton').click(function() {
                     redirectToBTCPage('home');
@@ -150,7 +162,7 @@ console.clear();
                console.log("Error loading template", data);
           };
           var loadPlayerTemplate = function() {
-               var playerTemplateUrl = "http://localhost:8001/btc-svc/ws/getPlayerTemplate?callback=?";
+               var playerTemplateUrl = attribs.ws + "/btc-svc/ws/getPlayerTemplate?callback=?";
                $j.getJSON(playerTemplateUrl, function(data) {
                          loadPlayerTemplateSuccess(data.json);
                     })
@@ -158,26 +170,14 @@ console.clear();
                          loadPlayerTemplateFailure(data);
                     });
           };
-          console.log(getUrlParameter("PL"));
+          var PL = getUrlParameter('PL');
+          var C = getUrlParameter('C');
+          var T = getUrlParameter('T');
           //Remote Calls
-          if (getUrlParameter("PL") === '') {
+          if (PL === '') {
                loadGridTemplate();
           } else {
                loadPlayerTemplate();
           }
-
-
-          //Local Calls
-          // $j('#btc_container').load("grid_template.html", function() {
-          //      $j.getJSON("grid.json", function(json) {
-          //           console.log(json); // this will show the info it in firebug console
-          //           loadGridPropertiesSuccess(json);
-          //      });
-          // });
-          // $j('#btc_container').load("player_template.html", function() {
-          //      $j.getJSON("grid.json", function(json) {
-          //           loadPlayer('json');
-          //      });
-          // });
      });
 })();
