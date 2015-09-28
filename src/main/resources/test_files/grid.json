@@ -2,8 +2,8 @@
      "NpYWNodzpiEoSWi3paQe2fkhXz9Q6B-i": {
           "comic": "Cubicles",
           "title": "New Sayings!",
-          "talent": "Warburton, McGrath, Wolf",
-          "thumb": "/assets/img/C",
+          "talent": "Warburton, McGrath, Wolf, MacDonald",
+          "thumb": "/assets/videos/C",
           "embed_code": "/assets/videos/C",
           "playlist_id": "2c0aa6d110ca49738916789459b4bb53",
           "updated_at": "2015-09-11T23:02:22Z"
@@ -12,7 +12,7 @@
           "comic": "Cursing On Cellphones",
           "title": "Butt Dial",
           "talent": "Dennis Miller",
-          "thumb": "/assets/img/COC",
+          "thumb": "/assets/videos/COC",
           "embed_code": "/assets/videos/COC",
           "playlist_id": "b9b0f8d2aba846778f59611e64249c69",
           "updated_at": "2015-09-11T23:01:31Z"
@@ -21,7 +21,7 @@
           "comic": "Deep Thoughts",
           "title": "Two Sacks",
           "talent": "Jack Handy",
-          "thumb": "/assets/img/DT",
+          "thumb": "/assets/videos/DT",
           "embed_code": "/assets/videos/DT",
           "playlist_id": "3e2d6661708049c5884bbaf3b613ee1c",
           "updated_at": "2015-09-08T16:01:04Z"
@@ -30,7 +30,7 @@
           "comic": "Joe Dirt 2 Beautiful Loser",
           "title": "Jobs",
           "talent": "David Spade",
-          "thumb": "/assets/img/JD",
+          "thumb": "/assets/videos/JD",
           "embed_code": "/assets/videos/JD",
           "playlist_id": "caff620a79c442b398c3db36f6c3e8f2",
           "updated_at": "2015-09-11T23:00:29Z"
@@ -39,7 +39,7 @@
           "comic": "Notes to Self",
           "title": "Mudslide Skin",
           "talent": "Julianne Moore",
-          "thumb": "/assets/img/NTS",
+          "thumb": "/assets/videos/NTS",
           "embed_code": "/assets/videos/NTS",
           "playlist_id": "8e971c2a17924b2d91597fc25994cd05",
           "updated_at": "2015-05-29T20:13:18Z"
@@ -48,7 +48,7 @@
           "comic": "Sketchy Coffee",
           "title": "Bald Man, Peg Leg",
           "talent": "Sarah Silverman",
-          "thumb": "/assets/img/SC",
+          "thumb": "/assets/videos/SC",
           "embed_code": "/assets/videos/SC",
           "playlist_id": "24ebfeb4241947fb864b600c642e6cf0",
           "updated_at": "2015-08-25T02:16:49Z"
@@ -57,7 +57,7 @@
           "comic": "This Just In",
           "title": "Silent But Deadly",
           "talent": "Dana Carvey",
-          "thumb": "/assets/img/TJI",
+          "thumb": "/assets/videos/TJI",
           "embed_code": "/assets/videos/TJI",
           "playlist_id": "9f76e164526f4481af9b1a489021604b",
           "updated_at": "2015-08-21T12:08:50Z"
@@ -66,7 +66,7 @@
           "comic": "Two Minute Talk Show",
           "title": "Brittany",
           "talent": "Dana Carvey",
-          "thumb": "/assets/img/TMTS",
+          "thumb": "/assets/videos/TMTS",
           "embed_code": "/assets/videos/TMTS",
           "playlist_id": "efe0c450e3444c4eb3f8a8633d7b7af4",
           "updated_at": "2015-09-11T23:06:01Z"
@@ -75,7 +75,7 @@
           "comic": "Church Lady",
           "title": "Elvis Twerking",
           "talent": "Dana Carvey",
-          "thumb": "/assets/img/CL",
+          "thumb": "/assets/videos/CL",
           "embed_code": "/assets/videos/CL",
           "playlist_id": "ba95a9f3f33e42e7a668db3c7304ea57",
           "updated_at": "2015-09-04T00:57:52Z"
@@ -84,7 +84,7 @@
           "comic": "Mall Show",
           "title": "11385",
           "talent": "David Spade",
-          "thumb": "/assets/img/MS",
+          "thumb": "/assets/videos/MS",
           "embed_code": "/assets/videos/MS",
           "playlist_id": "83df70d1fed94c13a51d6d2c4878de47",
           "updated_at": "2015-08-21T12:19:04Z"

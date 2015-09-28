@@ -64,7 +64,7 @@
           };
           //bootstrap css
           loadCSS(attribs.env + '/assets/css/style.css');
-          loadCSS(attribs.env + '/assets/fonts/permanent-marker.css');
+          loadCSS('http://fonts.googleapis.com/css?family=Permanent+Marker');
 
           var getUrlParameter = function(sParam) {
                var sPageURL = window.location.search.substring(1);
@@ -141,7 +141,7 @@
                     });
           };
           var loadPlayer = function() {
-               var player = '<video id="movie" preload controls=true autoplay> \
+               var player = '<video id="movie" preload controls=true autoplay poster="' + attribs.env + PL + '.png"> \
                                    <source src="' + attribs.env + PL + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
                                    <source src="' + attribs.env + PL + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
                                    <source src="' + attribs.env + PL + '.mp4" /> \
