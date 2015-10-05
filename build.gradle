@@ -34,6 +34,7 @@ ext {
      plexusCoreVersion = "1.0"
      janinoVersion = "2.7.5"
      mysqlConnectorVersion = "5.1.8"
+     hsqldbVersion = "2.3.2"
      commonsDbcpVersion = "1.4"
      guavaVersion = "18.0"
      lombokVersion = "1.12.6"
@@ -64,7 +65,11 @@ dependencies {
      // database
      compile "commons-dbcp:commons-dbcp:$commonsDbcpVersion"
      compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+     compile "org.hsqldb:hsqldb:$hsqldbVersion"
+
      compile "jave:jave:1.0.2"
+
+
 
      //Guava
      compile "com.google.guava:guava:$guavaVersion"
