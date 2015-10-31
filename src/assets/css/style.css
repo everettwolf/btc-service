@@ -8,7 +8,8 @@
      #pageblurb {
           font-size: 16px;
      }
-     #btc-playerContainer {
+
+     #btc-player-container {
           max-width: 100px;
           height: auto;
      }
@@ -31,7 +32,8 @@
      #pageblurb {
           font-size: 22px;
      }
-     #btc-playerContainer {
+
+     #btc-player-container {
           max-width: 300px;
           height: auto;
      }
@@ -64,7 +66,8 @@
      .regular .btc-ad-unit-small {
           width: 32%;
      }
-     #btc-playerContainer {
+
+     #btc-player-container {
           max-width: 620px;
           height: auto;
      }
@@ -98,9 +101,11 @@
      .regular .btc-ad-unit-small {
           width: 32%;
      }
-     #btc-playerContainer {
-          max-width: 620px;
-          height: auto;
+
+     #btc-player-container {
+          width: 610px;
+          height: 340px;
+          margin: 0 auto;
      }
      #comictitle {
           font-size: 30px;
@@ -423,12 +428,6 @@ body {
      margin: 0 1% 0 1%;
 }
 
-#btc-playerContainer {
-     margin: 0 auto;
-     max-width: 620px;
-     height: auto;
-}
-
 #btc-playerad {
      display: block;
      position: relative;
@@ -442,8 +441,8 @@ body {
      background-color: #e4ce99;
 }
 
-#moreComicsButton,
-#moreComicsButton:hover {
+#more-comics-button,
+#more-comics-button:hover {
      background-image: url('http://dev.beyondthecomics.com/img/btcMoreComicsBtnBg.png');
      background-repeat: no-repeat;
      display: block;
@@ -452,7 +451,7 @@ body {
      height: 32px;
 }
 
-#moreComicsButton:hover {
+#more-comics-button:hover {
      background-position: center bottom;
 }
 

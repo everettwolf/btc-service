@@ -33,10 +33,23 @@
      script.type = 'text/javascript';
      document.getElementsByTagName("head")[0].appendChild(script);
 
+     //load YT
+     if (window.YT) window.YT = null;
+     script = document.createElement("SCRIPT");
+     script.src = '//www.youtube.com/iframe_api';
+     script.type = 'application/javascript';
+     document.getElementsByTagName("head")[0].appendChild(script);
+
      var checkReady = function (callback) {
-          if (window.jQuery && window.jQuery.fn.jquery >= '2.1.4') {
+          var loadinitiated = new Date().getTime();
+          if (window.YT && window.YT.Player && window.jQuery && window.jQuery.fn.jquery >= '2.1.4') {
+               var codeloaded = new Date().getTime();
+               var loaddelay = ((codeloaded - loadinitiated) / 1000).toFixed(3);
+               console.log("BTC Log: Time to load: " + loaddelay);
+               console.log("BTC Log: YouTube Player: " + YT.Player);
                callback(true);
           } else {
+               console.log("BTC LOADING");
                window.setTimeout(function () {
                     checkReady(callback);
                }, 100);
@@ -47,6 +60,7 @@
           //Bootstrap the initial div into the DOM
           var $d = document;
           var $j = jQuery.noConflict();
+          var OO;
           var container_div = $d.createElement('div');
           container_div.id = 'btc_container';
           var content = $d.getElementById(SCRIPT_ID);
@@ -110,9 +124,11 @@
                     i++;
                });
           };
+
           var loadGridPropertiesFailure = function (data) {
                console.log("Error loading grid", data);
           };
+
           var loadGridProperties = function () {
                var gridJsonUrl = attribs.ws + "/btc-svc/ws/getGridJson?callback=?";
                $j.getJSON(gridJsonUrl, function (data) {
@@ -128,9 +144,11 @@
                $j('#pageblurb').html("New! Cartoon Shorts")
                loadGridProperties();
           };
+
           var loadGridTemplateFailure = function (data) {
                console.log("Error loading template", data);
           };
+
           var loadGridTemplate = function () {
                var gridTemplateUrl = attribs.ws + "/btc-svc/ws/getGridTemplate?callback=?";
                $j.getJSON(gridTemplateUrl, function (data) {
@@ -140,27 +158,61 @@
                          loadGridTemplateFailure(data);
                     });
           };
+
           var loadPlayer = function () {
                var player = '<video id="movie" preload controls=true autoplay poster="' + attribs.env + PL + '.png"> \
                                    <source src="' + attribs.env + PL + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
                                    <source src="' + attribs.env + PL + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
                                    <source src="' + attribs.env + PL + '.mp4" /> \
                               </video>';
-               $j("#btc-playerContainer").html(player);
+               $j("#btc-player-container").html(player);
           };
+
+          var onPlayerReady = function (event) {
+               event.target.playVideo();
+          };
+
+          var onPlayerStateChange = function (event) {
+               //do nothing for now
+          };
+
+          var loadYTPlayer = function () {
+               if (OO) {
+                    console.log("OO EXISTS")
+                    OO.cuePlaylist({list: 'PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws'}, 0, 0, 'default');
+               } else {
+                    console.log("OO INITIALIZING")
+                    OO = new YT.Player('btc-player-container', {
+                         playerVars: {
+                              listType: 'playlist',
+                              list: 'PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws',
+                              controls: 0,
+                              showinfo: 0,
+                              modestbranding: 1
+                         },
+                         events: {
+                              'onReady': onPlayerReady,
+                              'onStateChange': onPlayerStateChange
+                         }
+                    });
+               }
+          };
+
           var loadPlayerTemplateSuccess = function (json) {
                $j('#btc_container').html(json);
                $j('#pagetitle #comictitle').html(C);
                $j('#pagetitle #comictalent').html('with ' + T);
 
-               $j('#moreComicsButton').click(function () {
+               $j('#more-comics-button').click(function () {
                     redirectToBTCPage('home');
                });
-               loadPlayer();
+               loadYTPlayer();
           };
+
           var loadPlayerTemplateFailure = function (data) {
                console.log("Error loading template", data);
           };
+
           var loadPlayerTemplate = function () {
                var playerTemplateUrl = attribs.ws + "/btc-svc/ws/getPlayerTemplate?callback=?";
                $j.getJSON(playerTemplateUrl, function (data) {
@@ -170,14 +222,17 @@
                          loadPlayerTemplateFailure(data);
                     });
           };
+
           var PL = getUrlParameter('PL');
           var C = getUrlParameter('C');
           var T = getUrlParameter('T');
+
           //Remote Calls
           if (PL === '') {
                loadGridTemplate();
           } else {
                loadPlayerTemplate();
           }
+
      });
 })();

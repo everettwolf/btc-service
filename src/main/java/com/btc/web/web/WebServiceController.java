@@ -77,15 +77,15 @@ public class WebServiceController {
      @RequestMapping(value = "getGridTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridTemplate() throws Exception {
 
-          Resource headerTemplate = new ClassPathResource("test_files/header.html");
+          Resource headerTemplate = new ClassPathResource("grid_assets/header.html");
           StringWriter header = new StringWriter();
           IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
 
-          Resource gridTemplate = new ClassPathResource("test_files/grid_template.html");
+          Resource gridTemplate = new ClassPathResource("grid_assets/grid_template.html");
           StringWriter content = new StringWriter();
           IOUtils.copy(gridTemplate.getInputStream(), content, Charsets.UTF_8);
 
-          Resource footerTemplate = new ClassPathResource("test_files/footer.html");
+          Resource footerTemplate = new ClassPathResource("grid_assets/footer.html");
           StringWriter footer = new StringWriter();
           IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
 
@@ -96,15 +96,15 @@ public class WebServiceController {
      @RequestMapping(value = "getPlayerTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getPlayerTemplate() throws Exception {
 
-          Resource headerTemplate = new ClassPathResource("test_files/header.html");
+          Resource headerTemplate = new ClassPathResource("grid_assets/header.html");
           StringWriter header = new StringWriter();
           IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
 
-          Resource playerTemplate = new ClassPathResource("test_files/player_template.html");
+          Resource playerTemplate = new ClassPathResource("grid_assets/player_template.html");
           StringWriter content = new StringWriter();
           IOUtils.copy(playerTemplate.getInputStream(), content, Charsets.UTF_8);
 
-          Resource footerTemplate = new ClassPathResource("test_files/footer.html");
+          Resource footerTemplate = new ClassPathResource("grid_assets/footer.html");
           StringWriter footer = new StringWriter();
           IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
 
@@ -115,7 +115,7 @@ public class WebServiceController {
      @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridJson() throws Exception {
 
-          Resource gridJson = new ClassPathResource("test_files/grid.json");
+          Resource gridJson = new ClassPathResource("grid_assets/grid.json");
           StringWriter writer = new StringWriter();
           IOUtils.copy(gridJson.getInputStream(), writer, Charsets.UTF_8);
           String returnJson = writer.toString();
