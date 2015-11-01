@@ -179,16 +179,17 @@
           var loadYTPlayer = function () {
                if (OO) {
                     console.log("OO EXISTS")
-                    OO.cuePlaylist({list: 'PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws'}, 0, 0, 'default');
+                    OO.cuePlaylist({list: PL}, 0, 0, 'default');
                } else {
                     console.log("OO INITIALIZING")
                     OO = new YT.Player('btc-player-container', {
                          playerVars: {
                               listType: 'playlist',
-                              list: 'PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws',
+                              list: PL,
                               controls: 0,
                               showinfo: 0,
-                              modestbranding: 1
+                              modestbranding: 1,
+                              rel: 0
                          },
                          events: {
                               'onReady': onPlayerReady,
@@ -206,7 +207,11 @@
                $j('#more-comics-button').click(function () {
                     redirectToBTCPage('home');
                });
-               loadYTPlayer();
+               if (PL === "PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws" || PL === "PLLVtQiMiCJeGpDb4hDe8dqx-5OIW0o-oD") {
+                    loadYTPlayer();
+               } else {
+                    loadPlayer();
+               }
           };
 
           var loadPlayerTemplateFailure = function (data) {
