@@ -123,7 +123,7 @@
                $.each(json.grid, function (key, val) {
                     var thumb = val.thumb
                     var comic = val.comic;
-                    var joke = val.joke;
+                    var joke = i <= 2 ? val.joke : ""; //Only put the joke on the first two videos
                     var talent = val.talent;
                     var playlistid = val.playlistid;
                     var img = '<img src="' + thumb + '" alt="' + comic + '"/>';
