@@ -1,5 +1,6 @@
 <link data-require="font-awesome@*" data-semver="4.3.0" rel="stylesheet"
       href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+<link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
 
 <style>
      body {
@@ -15,23 +16,13 @@
           margin: 0 auto;
      }
 
-     .caption {
-          width: 100%;
-          max-width: 854px;
-          margin: 0 auto;
-          padding: 20px 0;
-     }
-
      .container {
           width: 100%;
           max-width: 854px;
           min-width: 440px;
-          background: #fff;
+          background: #e4ce99;
           margin: 0 auto;
      }
-
-     /*  VIDEO PLAYER CONTAINER
-              ############################### */
 
      .vid-container {
           position: relative;
@@ -71,26 +62,28 @@
      .vid-item {
           display: block;
           width: 148px;
-          height: 148px;
+          height: 128px;
           float: left;
-          margin: 0;
+          margin: 5px;
           padding: 10px;
+          background: #fff;
+          font-family: 'Permanent Marker', cursive;
      }
 
      .thumb {
           /*position: relative;*/
-          overflow: hidden;
+          /*overflow: hidden;*/
           height: 84px;
      }
 
      .thumb img {
           width: 100%;
           position: relative;
-          top: -13px;
+          top: 0;
      }
 
-     .vid-item .desc {
-          color: #21A1D2;
+     .vid-item .joke {
+          color: black;
           font-size: 15px;
           margin-top: 5px;
      }
@@ -169,31 +162,17 @@
 <div class="title">
      <h2>Beyond the Comics</h2>
 </div>
+<div class="comic">I love Eloise</div>
+<div class="talent">Chris Wolf</div>
 <div class="container">
      <!-- THE YOUTUBE PLAYER -->
-     <div id="vid-container">
+     <div class="vid-container">
+          <div id="vid-frame"></div>
           <!--<iframe id="vid_frame" src="//www.youtube.com/embed/OsqdeVU4Zak?rel=0&showinfo=0&autohide=1" frameborder="0" width="560" height="315"></iframe>-->
      </div>
      <!-- THE PLAYLIST -->
-     <div class="vid-list-
-
-     container">
+     <div class="vid-list-container">
           <div class="vid-list">
-               <div class="vid-item"
-                    onclick="document.getElementById('vid_frame').src='http://youtube.com/embed/OsqdeVU4Zak?autoplay=1&rel=0&showinfo=0&autohide=1'">
-                    <div class="thumb">
-                         <img src="https://i.ytimg.com/vi/OsqdeVU4Zak/default.jpg"/>
-                    </div>
-                    <div class="desc">Dig it!</div>
-               </div>
-               <div class="vid-item"
-                    onclick="document.getElementById('vid_frame').src='http://youtube.com/embed/BqU9xOrlfUI?autoplay=1&rel=0&showinfo=0&autohide=1'">
-                    <div class="thumb">
-                         <img src="https://i.ytimg.com/vi/BqU9xOrlfUI/default.jpg"/>
-                    </div>
-                    <div class="desc">Playing!</div>
-               </div>
-
           </div>
      </div>
      <!-- LEFT AND RIGHT ARROWS -->
@@ -208,7 +187,6 @@
 </div>
 <script>
      (function () {
-
           //load YT
           if (window.YT) window.YT = null;
           script = document.createElement("SCRIPT");
@@ -216,8 +194,8 @@
           script.type = 'application/javascript';
           document.getElementsByTagName("head")[0].appendChild(script);
 
+          var loadinitiated = new Date().getTime();
           var checkReady = function (callback) {
-               var loadinitiated = new Date().getTime();
                if (window.YT && window.YT.Player) {
                     var codeloaded = new Date().getTime();
                     var loaddelay = ((codeloaded - loadinitiated) / 1000).toFixed(3);
@@ -232,54 +210,157 @@
                }
           };
 
-          checkReady(function ($) {
-               var $j = jQuery.noConflict();
+          checkReady(function (jQuery) {
                var OO;
+
+               var json = {
+                    "grid": [
+                         {
+                              "playlistid": "PLLVtQiMiCJeENKOilvJvDv2xd22tTSjzO",
+                              "comic": "Church Lady",
+                              "joke": "Elvis Twerking",
+                              "thumb": "https://i.ytimg.com/vi/1z7im3MTFuU/mqdefault.jpg",
+                              "videoid": "1z7im3MTFuU",
+                              "talent": "Dana Carvey"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeGWZ21zwXRPSmw2sZrUp6en",
+                              "comic": "Deep Thoughts",
+                              "joke": "Two Sacks",
+                              "thumb": "https://i.ytimg.com/vi/7Cj7oaGMLSg/mqdefault.jpg",
+                              "videoid": "7Cj7oaGMLSg",
+                              "talent": "Jack Handey"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeEYYHFRMDVLmldoiegLStcy",
+                              "comic": "Joe Dirt",
+                              "joke": "",
+                              "thumb": "https://i.ytimg.com/vi/QxQlucRPUhY/mqdefault.jpg",
+                              "videoid": "QxQlucRPUhY",
+                              "talent": "David Spade"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeGf0DP7UgvPpQ6zmcwXfjqz",
+                              "comic": "Mall Show",
+                              "joke": "",
+                              "thumb": "https://i.ytimg.com/vi/SgRX3tzxtxg/mqdefault.jpg",
+                              "videoid": "SgRX3tzxtxg",
+                              "talent": "David Spade"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeHYIqFdQiQ2SlHUTh12io-1",
+                              "comic": "Note to Self",
+                              "joke": "",
+                              "thumb": "https://i.ytimg.com/vi/ZiGv5ZLw1Js/mqdefault.jpg",
+                              "videoid": "ZiGv5ZLw1Js",
+                              "talent": "Julianne Moore"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeFo48auR_WzdQlA_76VIMLb",
+                              "comic": "Sketchy Coffee",
+                              "joke": "",
+                              "thumb": "https://i.ytimg.com/vi/rER3K5vGwbQ/mqdefault.jpg",
+                              "videoid": "rER3K5vGwbQ",
+                              "talent": "Sarah Silverman"
+                         },
+                         {
+                              "playlistid": "PLLVtQiMiCJeGH4sOLnvW_vecxT-HbcCqH",
+                              "comic": "This Just In",
+                              "joke": "Domestic Disturbance",
+                              "thumb": "https://i.ytimg.com/vi/RTJFhWAQigw/mqdefault.jpg",
+                              "videoid": "RTJFhWAQigw",
+                              "talent": "Dana Carvey"
+                         }
+                    ]
+               };
+               var loadSlide = function (idx) {
+                    var comic_info = $("#vid-item_" + idx).data();
+                    $(".comic").html(comic_info.comic);
+                    $(".talent").html(comic_info.talent);
+                    $(".vid-item").css("background", "#fff");
+                    $("#vid-item_" + idx).css("background", "#66cdaa");
+               };
+
+               var buildCarousel = function () {
+                    var i = 0;
+                    console.log(json.grid);
+                    $.each(json.grid, function (key, val) {
+                         $("<div>", {
+                              class: "vid-item",
+                              id: "vid-item_" + i,
+                              data: {comic: val.comic, talent: val.talent}
+                         }).appendTo(".vid-list");
+                         $("<div>", {
+                              class: "thumb",
+                              id: "thumb_" + i
+                         }).appendTo("#vid-item_" + i)
+                         $("<img>", {
+                              src: val.thumb
+                         }).appendTo("#thumb_" + i)
+                         $("<div>", {
+                              class: "joke",
+                              text: val.joke
+                         }).appendTo("#vid-item_" + i)
+                         i++;
+                    });
+
+                    $(".vid-item").bind("click", function (event) {
+                         var idx = this.id.split("_")[1];
+                         loadSlide(idx);
+                         OO.loadPlaylist({
+                              list: "PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv",
+                              listType: "playlist",
+                              index: idx
+                         })
+
+                    });
+               };
 
                var onPlayerReady = function (event) {
                     event.target.playVideo();
                };
 
                var onPlayerStateChange = function (event) {
-                    //do nothing for now
-               };
-               var loadYTPlayer = function (PL) {
-                    if (OO) {
-                         console.log("OO EXISTS")
-                         OO.cuePlaylist({list: PL}, 0, 0, 'default');
-                    } else {
-                         console.log("OO INITIALIZING")
-                         OO = new YT.Player('vid-container', {
-                              playerVars: {
-                                   listType: 'playlist',
-                                   list: PL,
-                                   controls: 0,
-                                   showinfo: 0,
-                                   modestbranding: 1,
-                                   rel: 0
-                              },
-                              events: {
-                                   'onReady': onPlayerReady,
-                                   'onStateChange': onPlayerStateChange
-                              }
-                         });
+                    if (event.data === YT.PlayerState.PLAYING) {
+                         loadSlide(event.target.getPlaylistIndex());
                     }
                };
+               var loadYTPlayer = function (PL) {
 
-               $j(".arrow-right").bind("click", function (event) {
+                    OO = new YT.Player('vid-frame', {
+                         playerVars: {
+                              listType: 'playlist',
+                              list: PL,
+                              controls: 1,
+                              showinfo: 0,
+                              modestbranding: 1,
+                              rel: 0
+                         },
+                         events: {
+                              'onReady': onPlayerReady,
+                              'onStateChange': onPlayerStateChange
+                         }
+                    });
+                    buildCarousel();
+                    loadSlide(0);
+               };
+
+               $(".arrow-right").bind("click", function (event) {
                     event.preventDefault();
-                    $j(".vid-list-container").stop().animate({
-                         scrollLeft: "+=336"
+                    $(".vid-list-container").stop().animate({
+                         scrollLeft: "+=178"
                     }, 750);
                });
 
-               $j(".arrow-left").bind("click", function (event) {
+               $(".arrow-left").bind("click", function (event) {
                     event.preventDefault();
-                    $j(".vid-list-container").stop().animate({
-                         scrollLeft: "-=336"
+                    $(".vid-list-container").stop().animate({
+                         scrollLeft: "-=178"
                     }, 750);
                });
-               loadYTPlayer("PLLVtQiMiCJeGpDb4hDe8dqx-5OIW0o-oD");
+
+               loadYTPlayer("PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv");
+
           });
      })();
 </script>
