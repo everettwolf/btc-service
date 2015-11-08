@@ -1,19 +1,5 @@
 <link rel="stylesheet" href="/assets/css/stylealt.css">
 <link href='http://fonts.googleapis.com/css?family=Permanent+Marker' rel='stylesheet' type='text/css'>
-<script>
-     /**
-      * Function that tracks a click on an outbound link in Google Analytics.
-      * This function takes a valid URL string as an argument, and uses that URL string
-      * as the event label.
-      */
-     var trackOutboundLink = function (url) {
-          ga('send', 'event', 'outbound', 'click', url, {
-               'hitCallback': function () {
-                    document.location = url;
-               }
-          });
-     }
-</script>
 
 <div id="container">
      <header>
@@ -35,6 +21,8 @@
                          <script id="BTCGridWidget"
                                  data-env="http://192.168.0.8:3000"
                                  data-ws="http://192.168.0.8:8001"
+                                 data-style="website"
+                                 data-pl="PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv"
                                  src="/assets/js/BTCGridWidget.js">
                          </script>
                     </div>
@@ -101,6 +89,21 @@
 </div>
 <!--! end of #container -->
 
+<script>
+     /**
+      * Function that tracks a click on an outbound link in Google Analytics.
+      * This function takes a valid URL string as an argument, and uses that URL string
+      * as the event label.
+      */
+     var trackOutboundLink = function (url) {
+          ga('send', 'event', 'outbound', 'click', url, {
+               'hitCallback': function () {
+                    document.location = url;
+               }
+          });
+     }
+</script>
+
 <!-- Twitter Function -->
 <script>
      !function (d, s, id) {
@@ -125,84 +128,6 @@
      fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 </script>
-
-
-<script type="text/javascript">
-     $(document).ready(function () {
-          $("#submit").click(function () {
-               //get input field values
-               var user_firstname = $('input[name=firstname]').val();
-               var user_lastname = $('input[name=lastname]').val();
-               var user_email = $('input[name=email]').val();
-               var user_subject = $('input[name=subject]').val();
-               var user_message = $('textarea[name=message]').val();
-
-               //simple validation at client's end
-               //we simply change border color to red if empty field using .css()
-               var proceed = true;
-               if (user_firstname == "") {
-                    $('input[name=firstname]').css('border-color', 'red');
-                    proceed = false;
-               }
-               if (user_lastname == "") {
-                    $('input[name=lastname]').css('border-color', 'red');
-                    proceed = false;
-               }
-               if (user_email == "") {
-                    $('input[name=email]').css('border-color', 'red');
-                    proceed = false;
-               }
-               if (user_subject == "") {
-                    $('input[name=subject]').css('border-color', 'red');
-                    proceed = false;
-               }
-               if (user_message == "") {
-                    $('textarea[name=message]').css('border-color', 'red');
-                    proceed = false;
-               }
-
-               //everything looks good! proceed...
-               if (proceed) {
-                    //data to be sent to server
-                    var post_data = {
-                         'userFirstName': user_firstname,
-                         'userLastName': user_lastname,
-                         'userEmail': user_email,
-                         'userSubject': user_subject,
-                         'userMessage': user_message
-                    };
-
-                    //Ajax post data to server
-                    $.post('contact_me.php', post_data, function (response) {
-
-                         //load json data from server and output message
-                         if (response.type == 'error') {
-                              output = '<div class="error">' + response.text + '</div>';
-                         } else {
-
-                              output = '<div class="success">' + response.text + '</div>';
-
-                              //reset values in all input fields
-                              $('#contact_form input').val('');
-                              $('#contact_form textarea').val('');
-                         }
-
-                         $("#result").hide().html(output).slideDown();
-                    }, 'json');
-
-               }
-          });
-
-          //reset previously set border colors and hide all message on .keyup()
-          $("#contact_form input, #contact_form textarea").keyup(function () {
-               $("#contact_form input, #contact_form textarea").css('border-color', '');
-               $("#result").slideUp();
-          });
-
-     });
-
-</script>
-
 
 <!-- Change UA-XXXXX-X to be your site's ID -->
 <script>
