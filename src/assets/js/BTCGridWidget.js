@@ -36,27 +36,38 @@
      //load YT
      if (window.YT) window.YT = null;
      script = document.createElement("SCRIPT");
-     script.src = '//www.youtube.com/iframe_api';
-     script.type = 'application/javascript';
+     script.src = attribs.env + '/assets/js/youtube.js';
+     script.type = 'text/javascript';
      document.getElementsByTagName("head")[0].appendChild(script);
 
-     var checkReady = function (callback) {
-          var loadinitiated = new Date().getTime();
-          if (window.YT && window.YT.Player && window.jQuery && window.jQuery.fn.jquery >= '2.1.4') {
+     var jqueryloadinitiated = new Date().getTime();
+     var checkJQueryReady = function (callback) {
+          if (window.jQuery && window.jQuery.fn.jquery >= '2.1.4') {
                var codeloaded = new Date().getTime();
-               var loaddelay = ((codeloaded - loadinitiated) / 1000).toFixed(3);
-               console.log("BTC Log: Time to load: " + loaddelay);
-               console.log("BTC Log: YouTube Player: " + YT.Player);
+               var loaddelay = ((codeloaded - jqueryloadinitiated) / 1000).toFixed(3);
+               console.log("BTC Log: Time to load jQuery: " + loaddelay);
                callback(true);
           } else {
-               console.log("BTC LOADING");
                window.setTimeout(function () {
-                    checkReady(callback);
+                    checkJQueryReady(callback);
+               }, 100);
+          }
+     };
+     var ytplayerloadinitiated = new Date().getTime();
+     var checkYTPlayerReady = function (callback) {
+          if (window.YT && window.YT.Player) {
+               var codeloaded = new Date().getTime();
+               var loaddelay = ((codeloaded - ytplayerloadinitiated) / 1000).toFixed(3);
+               console.log("BTC Log: Time to load YT Player: " + loaddelay);
+               callback(true);
+          } else {
+               window.setTimeout(function () {
+                    checkYTPlayerReady(callback);
                }, 100);
           }
      };
 
-     checkReady(function ($) {
+     checkJQueryReady(function ($) {
           //Bootstrap the initial div into the DOM
           var $d = document;
           var $j = jQuery.noConflict();
@@ -104,22 +115,26 @@
 
           var loadGridPropertiesSuccess = function (json) {
                var i = 1;
-               $j.each(json, function (key, val) {
-                    var img = '<img src="' + attribs.env + '/' + val.thumb + '.png" alt="' + val.comic + '"/>';
-                    var joke = "";
+               $j.each(json.grid, function (key, val) {
+                    var thumb = val.thumb
+                    var comic = val.comic;
+                    var joke = val.joke;
+                    var talent = val.talent;
+                    var playlistid = val.playlistid;
+                    var img = '<img src="' + thumb + '" alt="' + comic + '"/>';
                     var slide = img +
                          "<div class='caption'>" +
-                         "<div class='title'>" + val.comic +
+                         "<div class='title'>" + comic +
                          "<div class='joke'>" + joke + "</div>" +
                          "</div>" +
-                         "<div class='voice'>" + val.talent + "</div>" +
+                         "<div class='voice'>" + talent + "</div>" +
                          "</div>";
                     $j("#vid-item" + i).html(slide);
 
                     var vid = "#vid-item" + i;
 
                     $j('#btc-content').on('click', vid, function () {
-                         redirectToBTCPage(val.embed_code, val.comic, val.talent);
+                         redirectToBTCPage(playlistid, comic, talent);
                     });
                     i++;
                });
@@ -177,11 +192,7 @@
           };
 
           var loadYTPlayer = function () {
-               if (OO) {
-                    console.log("OO EXISTS")
-                    OO.cuePlaylist({list: PL}, 0, 0, 'default');
-               } else {
-                    console.log("OO INITIALIZING")
+               checkYTPlayerReady(function ($) {
                     OO = new YT.Player('btc-player-container', {
                          playerVars: {
                               listType: 'playlist',
@@ -196,7 +207,7 @@
                               'onStateChange': onPlayerStateChange
                          }
                     });
-               }
+               });
           };
 
           var loadPlayerTemplateSuccess = function (json) {
@@ -207,7 +218,7 @@
                $j('#more-comics-button').click(function () {
                     redirectToBTCPage('home');
                });
-               if (PL === "PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws" || PL === "PLLVtQiMiCJeGpDb4hDe8dqx-5OIW0o-oD") {
+               if (1 === 1 || PL === "PLLVtQiMiCJeEcXlTmAuiY8T_0gWCTxyws" || PL === "PLLVtQiMiCJeGpDb4hDe8dqx-5OIW0o-oD") {
                     loadYTPlayer();
                } else {
                     loadPlayer();

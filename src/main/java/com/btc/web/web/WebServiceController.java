@@ -115,7 +115,7 @@ public class WebServiceController {
      @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridJson() throws Exception {
 
-          Resource gridJson = new ClassPathResource("grid_assets/grid.json");
+          Resource gridJson = new ClassPathResource("grid_assets/you_tube_grid.json");
           StringWriter writer = new StringWriter();
           IOUtils.copy(gridJson.getInputStream(), writer, Charsets.UTF_8);
           String returnJson = writer.toString();

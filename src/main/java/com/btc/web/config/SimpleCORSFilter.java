@@ -19,9 +19,7 @@ public class SimpleCORSFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info("Adding Access Control Response Headers");
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        log.info(response.getHeaderNames().toString());
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, HEAD, OPTIONS");
