@@ -120,12 +120,12 @@
 
           var loadGridPropertiesSuccess = function (json) {
                var i = 1;
-               $.each(json.grid, function (key, val) {
+               $.each(json, function (key, val) {
                     var thumb = val.thumb
                     var comic = val.comic;
                     var joke = i <= 2 ? val.joke : ""; //Only put the joke on the first two videos
                     var talent = val.talent;
-                    var playlistid = val.playlistid;
+                    var playlistid = val.playlistId;
                     var img = '<img src="' + thumb + '" alt="' + comic + '"/>';
                     var slide = img +
                          "<div class='caption'>" +
@@ -150,9 +150,10 @@
           };
 
           var loadGridProperties = function () {
-               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getGridJson?callback=?";
+               //TODO: Replace with real call
+               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getFoo";
                $.getJSON(gridJsonUrl, function (data) {
-                    loadGridPropertiesSuccess($.parseJSON(data.json));
+                    loadGridPropertiesSuccess(data);
                })
                     .fail(function (data) {
                          loadGridPropertiesFailure(data);

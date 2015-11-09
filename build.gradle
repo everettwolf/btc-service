@@ -39,7 +39,8 @@ ext {
      guavaVersion = "18.0"
      lombokVersion = "1.12.6"
      commonsIOVersion = "2.4"
-     jerseyJSONVersion = "1.19"
+     gsonVersion = "2.4"
+     orgJsonVersion = "20150729"
 }
 
 repositories {
@@ -69,12 +70,12 @@ dependencies {
 
      compile "jave:jave:1.0.2"
 
-
-
      //Guava
      compile "com.google.guava:guava:$guavaVersion"
 
-     compile "com.sun.jersey:jersey-json:$jerseyJSONVersion"
+     //JSON
+     compile "com.google.code.gson:gson:$gsonVersion"
+     compile "org.json:json:$orgJsonVersion"
 
      compile "org.projectlombok:lombok:$lombokVersion"
 
