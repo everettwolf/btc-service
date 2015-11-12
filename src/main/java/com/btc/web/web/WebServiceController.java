@@ -1,16 +1,19 @@
 package com.btc.web.web;
 
 import com.btc.web.model.ComicsGrid;
+import com.btc.web.model.Playlists;
+import com.btc.web.model.repository.PlaylistRepository;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sun.deploy.util.StringUtils;
 import it.sauronsoftware.jave.*;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -25,9 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
@@ -49,6 +50,9 @@ public class WebServiceController {
                this.json = str;
           }
      }
+
+     @Autowired
+     private PlaylistRepository playlistRepository;
 
      @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, consumes = {"multipart/*"}, produces = MediaType.APPLICATION_JSON_VALUE)
      public String uploadVideo(@RequestPart("video") MultipartFile video) {
@@ -125,125 +129,102 @@ public class WebServiceController {
      @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridJson() throws Exception {
 
-          Resource gridJson = new ClassPathResource("grid_assets/you_tube_grid.json");
-          StringWriter writer = new StringWriter();
-          IOUtils.copy(gridJson.getInputStream(), writer, Charsets.UTF_8);
-          String returnJson = writer.toString();
-          return new DataBean(returnJson);
+          return new DataBean(playlistRepository.findByPlaylistId("PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv").getPlaylistJSON());
      }
 
      @RequestMapping(value = "getFoo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-     public List<ComicsGrid> getFoo() throws Exception {
+     public void getFoo() throws Exception {
 
-          String gridId = "";
-          List<String> videoIds = new ArrayList<>();
-          Map<String, String> playlists = new HashMap<>();
-          List<ComicsGrid> comicsGridList = new ArrayList<>();
+          List<ComicsGrid> comicsGridList;
+          JsonObject playlistJsonObject = getAllPlaylistsForChannel();
+          JsonArray playlistJsonArray = playlistJsonObject.getAsJsonArray("items");
 
-          String uri;
-          RestTemplate restTemplate;
-          String result;
-          JsonObject jsonObject;
-          JsonArray jsonArray;
+          for (int i = 0; i < playlistJsonArray.size(); i++) {
+               comicsGridList = new ArrayList<>();
+               JsonObject playlistItem = playlistJsonArray.get(i).getAsJsonObject();
+               String playlistId = playlistItem.get("id").getAsString();
 
-          uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=UCrw5nc-6MP632Mx_-3_O4OQ&maxResults=50&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
-          restTemplate = new RestTemplate();
-          result = restTemplate.getForObject(uri, String.class);
+               JsonObject playlistSnippet = playlistItem.get("snippet").getAsJsonObject();
+               String playlistName = playlistSnippet.get("title").getAsString();
 
-          jsonObject = new JsonParser().parse(result).getAsJsonObject();
-          jsonArray = jsonObject.getAsJsonArray("items");
+               JsonObject jsonObject = getPlaylistItemsByPlaylistId(playlistId);
+               JsonArray jsonArray = jsonObject.getAsJsonArray("items");
 
-          for (int i = 0; i < jsonArray.size(); i++) {
-               JsonObject item = jsonArray.get(i).getAsJsonObject();
-               String playlistId = item.get("id").getAsString();
+               for (int j = 0; j < jsonArray.size(); j++) {
 
-               JsonObject snippet = item.get("snippet").getAsJsonObject();
-               String playlistTitle = snippet.get("title").getAsString();
-               if (playlistTitle.toLowerCase().equals("grid")) gridId = playlistId;
+                    ComicsGrid comicsGrid = new ComicsGrid();
 
-               playlists.put(playlistTitle, playlistId);
+                    JsonObject item = jsonArray.get(j).getAsJsonObject();
 
-          }
+                    JsonObject snippet = item.get("snippet").getAsJsonObject();
 
-          System.out.println(gridId);
-          System.out.println(playlists);
+                    String comic = snippet.get("title").getAsString();
+                    String joke = snippet.get("description").getAsString();
 
-          uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + gridId + "&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
-          restTemplate = new RestTemplate();
-          result = restTemplate.getForObject(uri, String.class);
+                    String thumb = snippet.get("thumbnails")
+                         .getAsJsonObject()
+                         .get("medium")
+                         .getAsJsonObject()
+                         .get("url").getAsString();
 
-          jsonObject = new JsonParser().parse(result).getAsJsonObject();
-          jsonArray = jsonObject.getAsJsonArray("items");
+                    String videoId = snippet.get("resourceId")
+                         .getAsJsonObject()
+                         .get("videoId")
+                         .getAsString();
 
-          for (int i = 0; i < jsonArray.size(); i++) {
+                    String talent = getTalentByVideoId(videoId);
 
-               ComicsGrid comicsGrid = new ComicsGrid();
-
-               JsonObject item = jsonArray.get(i).getAsJsonObject();
-
-               JsonObject snippet = item.get("snippet").getAsJsonObject();
-
-               String playlistId = playlists.get(snippet.get("title").getAsString());
-               String comic = snippet.get("title").getAsString();
-               String joke = snippet.get("description").getAsString();
-
-               String thumb = snippet.get("thumbnails")
-                    .getAsJsonObject()
-                    .get("medium")
-                    .getAsJsonObject()
-                    .get("url").getAsString();
-
-               String videoId = snippet.get("resourceId")
-                    .getAsJsonObject()
-                    .get("videoId")
-                    .getAsString();
-
-               videoIds.add(videoId);
-
-               comicsGrid.setPlaylistId(playlistId);
-               comicsGrid.setComic(comic);
-               comicsGrid.setJoke(joke);
-               comicsGrid.setThumb(thumb);
-               comicsGrid.setVideoId(videoId);
-               comicsGridList.add(comicsGrid);
-               System.out.println(playlistId);
-               System.out.println(comic);
-               System.out.println(joke);
-               System.out.println(thumb);
-               System.out.println(videoId + "\n\n");
-
-          }
-
-          uri = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + StringUtils.join(videoIds, ",") + "&maxResults=50&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
-          restTemplate = new RestTemplate();
-          result = restTemplate.getForObject(uri, String.class);
-
-          jsonObject = new JsonParser().parse(result).getAsJsonObject();
-          jsonArray = jsonObject.getAsJsonArray("items");
-
-          for (int i = 0; i < jsonArray.size(); i++) {
-               String videoId = jsonArray.get(i).getAsJsonObject()
-                    .get("id")
-                    .getAsString();
-
-               String talent = jsonArray.get(i).getAsJsonObject()
-                    .get("snippet")
-                    .getAsJsonObject()
-                    .get("tags")
-                    .getAsJsonArray()
-                    .get(0)
-                    .getAsString();
-
-               for (ComicsGrid comicsGrid : comicsGridList) {
-                    if (comicsGrid.getVideoId().equals(videoId)) {
-                         comicsGrid.setTalent(talent);
-                         break;
-                    }
-
+                    comicsGrid.setPlaylistId(playlistId);
+                    comicsGrid.setComic(comic);
+                    comicsGrid.setJoke(joke);
+                    comicsGrid.setThumb(thumb);
+                    comicsGrid.setVideoId(videoId);
+                    comicsGrid.setTalent(talent);
+                    comicsGridList.add(comicsGrid);
                }
+
+               Playlists playlist = new Playlists();
+               playlist.setPlaylistId(playlistId);
+               playlist.setPlaylistName(playlistName);
+               playlist.setPlaylistJSON(new Gson().toJson(comicsGridList));
+               playlistRepository.save(playlist);
+
           }
 
-          return comicsGridList;
+     }
+
+     private JsonObject getAllPlaylistsForChannel() {
+
+          String uri = "https://www.googleapis.com/youtube/v3/playlists?part=snippet&channelId=UCrw5nc-6MP632Mx_-3_O4OQ&maxResults=50&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
+          RestTemplate restTemplate = new RestTemplate();
+          String result = restTemplate.getForObject(uri, String.class);
+
+          return new JsonParser().parse(result).getAsJsonObject();
+     }
+
+     private JsonObject getPlaylistItemsByPlaylistId(String gridId) {
+          String uri = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + gridId + "&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
+          RestTemplate restTemplate = new RestTemplate();
+          String result = restTemplate.getForObject(uri, String.class);
+
+          return new JsonParser().parse(result).getAsJsonObject();
+     }
+
+     private String getTalentByVideoId(String videoId) {
+          String uri = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoId + "&maxResults=50&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
+          RestTemplate restTemplate = new RestTemplate();
+          String result = restTemplate.getForObject(uri, String.class);
+
+          JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
+          JsonArray jsonArray = jsonObject.getAsJsonArray("items");
+
+          return jsonArray.get(0).getAsJsonObject()
+               .get("snippet")
+               .getAsJsonObject()
+               .get("tags")
+               .getAsJsonArray()
+               .get(0)
+               .getAsString();
      }
 
      private File convert(MultipartFile file) throws Exception {

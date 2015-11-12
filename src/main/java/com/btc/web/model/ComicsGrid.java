@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class ComicsGrid {
      private String playlistId;
+     private String playlistName;
      private String videoId;
      private String thumb;
      private String comic;

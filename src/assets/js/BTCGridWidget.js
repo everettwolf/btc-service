@@ -151,9 +151,9 @@
 
           var loadGridProperties = function () {
                //TODO: Replace with real call
-               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getFoo";
+               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getGridJson";
                $.getJSON(gridJsonUrl, function (data) {
-                    loadGridPropertiesSuccess(data);
+                    loadGridPropertiesSuccess($.parseJSON(data.json));
                })
                     .fail(function (data) {
                          loadGridPropertiesFailure(data);
