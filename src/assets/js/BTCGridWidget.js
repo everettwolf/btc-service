@@ -67,6 +67,69 @@
           //Bootstrap the initial div into the DOM
           var $d = document;
           var OO;
+
+          var json = {
+               "grid": [
+                    {
+                         "playlistid": "PLLVtQiMiCJeENKOilvJvDv2xd22tTSjzO",
+                         "comic": "Church Lady",
+                         "joke": "Elvis Twerking",
+                         "thumb": "https://i.ytimg.com/vi/1z7im3MTFuU/mqdefault.jpg",
+                         "videoid": "1z7im3MTFuU",
+                         "talent": "Dana Carvey"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeGWZ21zwXRPSmw2sZrUp6en",
+                         "comic": "Deep Thoughts",
+                         "joke": "Two Sacks",
+                         "thumb": "https://i.ytimg.com/vi/7Cj7oaGMLSg/mqdefault.jpg",
+                         "videoid": "7Cj7oaGMLSg",
+                         "talent": "Jack Handey"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeEYYHFRMDVLmldoiegLStcy",
+                         "comic": "Joe Dirt",
+                         "joke": "",
+                         "thumb": "https://i.ytimg.com/vi/QxQlucRPUhY/mqdefault.jpg",
+                         "videoid": "QxQlucRPUhY",
+                         "talent": "David Spade"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeGf0DP7UgvPpQ6zmcwXfjqz",
+                         "comic": "Mall Show",
+                         "joke": "",
+                         "thumb": "https://i.ytimg.com/vi/SgRX3tzxtxg/mqdefault.jpg",
+                         "videoid": "SgRX3tzxtxg",
+                         "talent": "David Spade"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeHYIqFdQiQ2SlHUTh12io-1",
+                         "comic": "Note to Self",
+                         "joke": "",
+                         "thumb": "https://i.ytimg.com/vi/ZiGv5ZLw1Js/mqdefault.jpg",
+                         "videoid": "ZiGv5ZLw1Js",
+                         "talent": "Julianne Moore"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeFo48auR_WzdQlA_76VIMLb",
+                         "comic": "Sketchy Coffee",
+                         "joke": "",
+                         "thumb": "https://i.ytimg.com/vi/rER3K5vGwbQ/mqdefault.jpg",
+                         "videoid": "rER3K5vGwbQ",
+                         "talent": "Sarah Silverman"
+                    },
+                    {
+                         "playlistid": "PLLVtQiMiCJeGH4sOLnvW_vecxT-HbcCqH",
+                         "comic": "This Just In",
+                         "joke": "Domestic Disturbance",
+                         "thumb": "https://i.ytimg.com/vi/RTJFhWAQigw/mqdefault.jpg",
+                         "videoid": "RTJFhWAQigw",
+                         "talent": "Dana Carvey"
+                    }
+               ]
+          };
+
+
           var container_div = $d.createElement('div');
           container_div.id = 'btc_container';
           var content = $d.getElementById(SCRIPT_ID);
@@ -190,8 +253,50 @@
                $("#btc-player-container").html(player);
           };
 
+          var loadSlide = function (idx) {
+               var comic_info = $("#btc-vid-item_" + idx).data();
+               $(".comic").html(comic_info.comic);
+               $(".talent").html(comic_info.talent);
+               $(".btc-vid-item").css("background", "#fff");
+               $("#btc-vid-item_" + idx).css("background", "#66cdaa");
+          };
+
+          var buildCarousel = function () {
+               var i = 0;
+               $.each(json.grid, function (key, val) {
+                    $("<div>", {
+                         class: "btc-vid-item",
+                         id: "btc-vid-item_" + i,
+                         data: {comic: val.comic, talent: val.talent}
+                    }).appendTo(".btc-vid-list");
+                    $("<div>", {
+                         class: "thumb",
+                         id: "thumb_" + i
+                    }).appendTo("#btc-vid-item_" + i)
+                    $("<img>", {
+                         src: val.thumb
+                    }).appendTo("#thumb_" + i)
+                    $("<div>", {
+                         class: "joke",
+                         text: val.joke
+                    }).appendTo("#btc-vid-item_" + i)
+                    i++;
+               });
+
+               $(".btc-vid-item").bind("click", function (event) {
+                    var idx = this.id.split("_")[1];
+                    loadSlide(idx);
+                    OO.loadPlaylist({
+                         list: "PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv",
+                         listType: "playlist",
+                         index: idx
+                    })
+
+               });
+          };
+
           var onPlayerReady = function (event) {
-               event.target.playVideo();
+               //event.target.playVideo();
           };
 
           var onPlayerStateChange = function (event) {
@@ -204,7 +309,7 @@
                          playerVars: {
                               listType: 'playlist',
                               list: PL,
-                              controls: 0,
+                              controls: 1,
                               showinfo: 0,
                               modestbranding: 1,
                               rel: 0
@@ -214,6 +319,8 @@
                               'onStateChange': onPlayerStateChange
                          }
                     });
+                    buildCarousel();
+                    loadSlide(0);
                });
           };
 

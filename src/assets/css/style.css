@@ -264,11 +264,18 @@ body {
      line-height: 20px;
 }
 
+/*#btc-content {*/
+/*position: relative;*/
+/*display: inline-block;*/
+/*height: auto;*/
+/*margin: 0 1% 0 1%;*/
+/*}*/
+
 #btc-content {
-     position: relative;
-     display: inline-block;
-     height: auto;
-     margin: 0 1% 0 1%;
+     width: 100%;
+     max-width: 854px;
+     min-width: 440px;
+     margin: 0 auto;
 }
 
 .btc-new-today {
@@ -553,4 +560,88 @@ ins {
      float: right;
      width: 10%;
      white-space: nowrap;
+}
+
+.btc-vid-list-container {
+     width: 92%;
+     overflow: hidden;
+     margin-top: 20px;
+     margin-left: 4%;
+     padding-bottom: 20px;
+}
+
+.btc-vid-list {
+     width: 1344px;
+     position: relative;
+     top: 0;
+     left: 0;
+}
+
+.btc-vid-item {
+     display: block;
+     width: 148px;
+     height: 128px;
+     float: left;
+     margin: 5px;
+     padding: 10px;
+     background: #fff;
+     font-family: 'Permanent Marker', cursive;
+}
+
+.thumb {
+     /*position: relative;*/
+     /*overflow: hidden;*/
+     height: 84px;
+}
+
+.thumb img {
+     width: 100%;
+     position: relative;
+     top: 0;
+}
+
+.btc-vid-item .joke {
+     color: black;
+     font-size: 15px;
+     margin-top: 5px;
+}
+
+.btc-vid-item:hover {
+     background: #eee;
+     cursor: pointer;
+}
+
+.btc-arrows {
+     position: relative;
+     width: 100%;
+}
+
+.btc-arrow-left {
+     color: #fff;
+     position: absolute;
+     background: #777;
+     padding: 15px;
+     left: -25px;
+     top: -130px;
+     z-index: 99;
+     cursor: pointer;
+}
+
+.btc-arrow-right {
+     color: #fff;
+     position: absolute;
+     background: #777;
+     padding: 15px;
+     right: -25px;
+     top: -130px;
+     z-index: 100;
+     cursor: pointer;
+}
+
+.btc-arrow-left:hover {
+     background: #CC181E;
+}
+
+.btc-arrow-right:hover {
+     background: #CC181E;
 }
