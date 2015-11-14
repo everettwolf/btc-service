@@ -3,12 +3,9 @@ package com.btc.web;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -20,11 +17,11 @@ import java.util.Collections;
 /**
  * Created by Chris on 9/12/14.
  */
-@Configuration
-@EnableAutoConfiguration
+//@Configuration
+//@EnableAutoConfiguration
 @EnableJpaRepositories
 @SpringBootApplication
-@ComponentScan(value = "com.btc.web")
+//@ComponentScan(value = "com.btc.web")
 public class Application {
 
      @Value("${db.auto}")

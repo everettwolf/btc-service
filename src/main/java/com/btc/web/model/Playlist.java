@@ -12,8 +12,8 @@ import java.io.Serializable;
  */
 @Data
 @Entity
-@Table(name = "playlists")
-public class Playlists implements Serializable {
+@Table(name = "playlist")
+public class Playlist implements Serializable {
 
      private static final long serialVersionUID = 1L;
 

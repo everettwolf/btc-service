@@ -1,8 +1,8 @@
 package com.btc.web.web;
 
 import com.btc.web.model.ComicsGrid;
-import com.btc.web.model.Playlists;
-import com.btc.web.model.repository.PlaylistRepository;
+import com.btc.web.model.Playlist;
+import com.btc.web.service.PlaylistService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -28,7 +28,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 
@@ -52,7 +54,7 @@ public class WebServiceController {
      }
 
      @Autowired
-     private PlaylistRepository playlistRepository;
+     private PlaylistService playlistService;
 
      @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, consumes = {"multipart/*"}, produces = MediaType.APPLICATION_JSON_VALUE)
      public String uploadVideo(@RequestPart("video") MultipartFile video) {
@@ -129,25 +131,39 @@ public class WebServiceController {
      @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridJson() throws Exception {
 
-          return new DataBean(playlistRepository.findByPlaylistId("PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv").getPlaylistJSON());
+          return new DataBean(playlistService.findByPlaylistId("PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv").getPlaylistJSON());
      }
 
      @RequestMapping(value = "getFoo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public void getFoo() throws Exception {
 
           List<ComicsGrid> comicsGridList;
+          Map<String, String> playlistMap = new HashMap<>();
           JsonObject playlistJsonObject = getAllPlaylistsForChannel();
           JsonArray playlistJsonArray = playlistJsonObject.getAsJsonArray("items");
 
           for (int i = 0; i < playlistJsonArray.size(); i++) {
+               JsonObject playlistItem = playlistJsonArray
+                    .get(i)
+                    .getAsJsonObject();
+
+               playlistMap.put(
+                    playlistItem
+                         .get("snippet")
+                         .getAsJsonObject()
+                         .get("title")
+                         .getAsString(),
+                    playlistItem
+                         .get("id")
+                         .getAsString()
+
+               );
+          }
+
+          for (Map.Entry<String, String> entry : playlistMap.entrySet()) {
+
                comicsGridList = new ArrayList<>();
-               JsonObject playlistItem = playlistJsonArray.get(i).getAsJsonObject();
-               String playlistId = playlistItem.get("id").getAsString();
-
-               JsonObject playlistSnippet = playlistItem.get("snippet").getAsJsonObject();
-               String playlistName = playlistSnippet.get("title").getAsString();
-
-               JsonObject jsonObject = getPlaylistItemsByPlaylistId(playlistId);
+               JsonObject jsonObject = getPlaylistItemsByPlaylistId(entry.getValue());
                JsonArray jsonArray = jsonObject.getAsJsonArray("items");
 
                for (int j = 0; j < jsonArray.size(); j++) {
@@ -174,7 +190,7 @@ public class WebServiceController {
 
                     String talent = getTalentByVideoId(videoId);
 
-                    comicsGrid.setPlaylistId(playlistId);
+                    comicsGrid.setPlaylistId(playlistMap.get(comic));
                     comicsGrid.setComic(comic);
                     comicsGrid.setJoke(joke);
                     comicsGrid.setThumb(thumb);
@@ -183,11 +199,14 @@ public class WebServiceController {
                     comicsGridList.add(comicsGrid);
                }
 
-               Playlists playlist = new Playlists();
-               playlist.setPlaylistId(playlistId);
-               playlist.setPlaylistName(playlistName);
+               Playlist playlist = playlistService.findByPlaylistId(entry.getValue());
+               if (playlist != null) playlistService.deleteByPlaylistId(entry.getValue());
+
+               playlist = new Playlist();
+               playlist.setPlaylistId(entry.getValue());
+               playlist.setPlaylistName(entry.getKey());
                playlist.setPlaylistJSON(new Gson().toJson(comicsGridList));
-               playlistRepository.save(playlist);
+               playlistService.save(playlist);
 
           }
 
@@ -213,18 +232,23 @@ public class WebServiceController {
      private String getTalentByVideoId(String videoId) {
           String uri = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoId + "&maxResults=50&key=AIzaSyDCloQetmWP3BgQ7q-1m9K_hEVdyY2qorw";
           RestTemplate restTemplate = new RestTemplate();
-          String result = restTemplate.getForObject(uri, String.class);
 
-          JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
-          JsonArray jsonArray = jsonObject.getAsJsonArray("items");
+          try {
+               String result = restTemplate.getForObject(uri, String.class);
 
-          return jsonArray.get(0).getAsJsonObject()
-               .get("snippet")
-               .getAsJsonObject()
-               .get("tags")
-               .getAsJsonArray()
-               .get(0)
-               .getAsString();
+               JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
+               JsonArray jsonArray = jsonObject.getAsJsonArray("items");
+
+               return jsonArray.get(0).getAsJsonObject()
+                    .get("snippet")
+                    .getAsJsonObject()
+                    .get("tags")
+                    .getAsJsonArray()
+                    .get(0)
+                    .getAsString();
+          } catch (Exception e) {
+               return "Unknown";
+          }
      }
 
      private File convert(MultipartFile file) throws Exception {

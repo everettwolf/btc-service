@@ -23,7 +23,7 @@ buildscript {
           mavenCentral()
      }
      dependencies {
-          classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.4.RELEASE")
+          classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
      }
 }
 
@@ -31,6 +31,7 @@ buildscript {
 ext {
      springBootVersion = "1.2.2.RELEASE"
      springSecurityVersion = "3.2.4.RELEASE"
+     springContextVersion = "4.2.2.RELEASE"
      plexusCoreVersion = "1.0"
      janinoVersion = "2.7.5"
      mysqlConnectorVersion = "5.1.8"
@@ -41,6 +42,7 @@ ext {
      commonsIOVersion = "2.4"
      gsonVersion = "2.4"
      orgJsonVersion = "20150729"
+     ehcacheVersion = "2.6.11"
 }
 
 repositories {
@@ -50,6 +52,7 @@ repositories {
 }
 
 dependencies {
+     compile "org.springframework:spring-context:$springContextVersion"
      compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
      compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion", {
           exclude group: "org.apache.tomcat.embed"
@@ -59,7 +62,6 @@ dependencies {
      }
      compile "org.springframework.security:spring-security-core:$springSecurityVersion"
      compile "org.springframework.security:spring-security-config:$springSecurityVersion"
-
 
      compile "org.codehaus.janino:janino:$janinoVersion"
 
@@ -76,6 +78,9 @@ dependencies {
      //JSON
      compile "com.google.code.gson:gson:$gsonVersion"
      compile "org.json:json:$orgJsonVersion"
+
+     //Cacheing
+     compile "net.sf.ehcache:ehcache-core:$ehcacheVersion"
 
      compile "org.projectlombok:lombok:$lombokVersion"
 
