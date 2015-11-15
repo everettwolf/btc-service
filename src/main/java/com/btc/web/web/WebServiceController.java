@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -128,14 +125,20 @@ public class WebServiceController {
           return new DataBean(returnJson);
      }
 
-     @RequestMapping(value = "getGridJson", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-     public DataBean getGridJson() throws Exception {
-
-          return new DataBean(playlistService.findByPlaylistId("PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv").getPlaylistJSON());
+     @RequestMapping(value = "getPlaylistProps/{playlistId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+     public DataBean getPlaylistProps(@PathVariable(value = "playlistId") String playlistId) throws Exception {
+          //TODO: Remove temp code
+          Playlist playlist = playlistService.findByPlaylistId(playlistId);
+          if (playlist != null) {
+               return new DataBean(playlist.getPlaylistJSON());
+          } else {
+               updatePlaylists();
+               return new DataBean(playlistService.findByPlaylistId(playlistId).getPlaylistJSON());
+          }
      }
 
-     @RequestMapping(value = "getFoo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-     public void getFoo() throws Exception {
+     @RequestMapping(value = "updatePlaylists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+     public void updatePlaylists() throws Exception {
 
           List<ComicsGrid> comicsGridList;
           Map<String, String> playlistMap = new HashMap<>();

@@ -3,7 +3,7 @@
      var SCRIPT_ID = 'BTCGridWidget'; //this has to match what is given out
 
      //Load attributes
-     var attribs = {env: null, pl: null, style: null, ws: null};
+     var attribs = {env: null, pl: null, style: null, ws: null, refresh: null};
 
      var errors = new Array;
      for (var key in attribs) {
@@ -66,74 +66,13 @@
      checkJQueryReady(function (jQuery) {
           //Bootstrap the initial div into the DOM
           var $d = document;
-          var OO;
-
-          var json = {
-               "grid": [
-                    {
-                         "playlistid": "PLLVtQiMiCJeENKOilvJvDv2xd22tTSjzO",
-                         "comic": "Church Lady",
-                         "joke": "Elvis Twerking",
-                         "thumb": "https://i.ytimg.com/vi/1z7im3MTFuU/mqdefault.jpg",
-                         "videoid": "1z7im3MTFuU",
-                         "talent": "Dana Carvey"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeGWZ21zwXRPSmw2sZrUp6en",
-                         "comic": "Deep Thoughts",
-                         "joke": "Two Sacks",
-                         "thumb": "https://i.ytimg.com/vi/7Cj7oaGMLSg/mqdefault.jpg",
-                         "videoid": "7Cj7oaGMLSg",
-                         "talent": "Jack Handey"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeEYYHFRMDVLmldoiegLStcy",
-                         "comic": "Joe Dirt",
-                         "joke": "",
-                         "thumb": "https://i.ytimg.com/vi/QxQlucRPUhY/mqdefault.jpg",
-                         "videoid": "QxQlucRPUhY",
-                         "talent": "David Spade"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeGf0DP7UgvPpQ6zmcwXfjqz",
-                         "comic": "Mall Show",
-                         "joke": "",
-                         "thumb": "https://i.ytimg.com/vi/SgRX3tzxtxg/mqdefault.jpg",
-                         "videoid": "SgRX3tzxtxg",
-                         "talent": "David Spade"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeHYIqFdQiQ2SlHUTh12io-1",
-                         "comic": "Note to Self",
-                         "joke": "",
-                         "thumb": "https://i.ytimg.com/vi/ZiGv5ZLw1Js/mqdefault.jpg",
-                         "videoid": "ZiGv5ZLw1Js",
-                         "talent": "Julianne Moore"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeFo48auR_WzdQlA_76VIMLb",
-                         "comic": "Sketchy Coffee",
-                         "joke": "",
-                         "thumb": "https://i.ytimg.com/vi/rER3K5vGwbQ/mqdefault.jpg",
-                         "videoid": "rER3K5vGwbQ",
-                         "talent": "Sarah Silverman"
-                    },
-                    {
-                         "playlistid": "PLLVtQiMiCJeGH4sOLnvW_vecxT-HbcCqH",
-                         "comic": "This Just In",
-                         "joke": "Domestic Disturbance",
-                         "thumb": "https://i.ytimg.com/vi/RTJFhWAQigw/mqdefault.jpg",
-                         "videoid": "RTJFhWAQigw",
-                         "talent": "Dana Carvey"
-                    }
-               ]
-          };
-
-
           var container_div = $d.createElement('div');
           container_div.id = 'btc_container';
           var content = $d.getElementById(SCRIPT_ID);
           content.parentNode.insertBefore(container_div, content);
+
+          //Initialize global variables
+          var BTC, PL;
 
           //Load Stylesheets
           var loadCSS = function (href) {
@@ -172,13 +111,22 @@
           };
 
           var redirectToBTCPage = function (url, comic, talent) {
-               var param = url === 'home' ? '' : '?PL=' + url + '&C=' + encodeURIComponent(comic) + '&T=' + encodeURIComponent(talent) + '#btc-edge-top';
-               var protocol = window.location.protocol + '//';
-               var hostname = window.location.hostname;
-               var port = window.location.port !== "" ? ":" + window.location.port : "";
-               var pathname = window.location.pathname;
-               url = protocol + hostname + port + pathname + param;
-               window.location.replace(url);
+               if (attribs.refresh === 'true') {
+                    var param = url === 'home' ? '' : '?PL=' + url + '&C=' + encodeURIComponent(comic) + '&T=' + encodeURIComponent(talent) + '#btc-edge-top';
+                    var protocol = window.location.protocol + '//';
+                    var hostname = window.location.hostname;
+                    var port = window.location.port !== "" ? ":" + window.location.port : "";
+                    var pathname = window.location.pathname;
+                    url = protocol + hostname + port + pathname + param;
+                    window.location.replace(url);
+               } else {
+                    if (url === 'home') {
+                         loadGridTemplate();
+                    } else {
+                         PL = url;
+                         loadPlayerTemplate();
+                    }
+               }
           };
 
           var loadGridPropertiesSuccess = function (json) {
@@ -203,6 +151,7 @@
 
                     $('#btc-content').on('click', vid, function () {
                          redirectToBTCPage(playlistid, comic, talent);
+                         return false;
                     });
                     i++;
                });
@@ -213,8 +162,7 @@
           };
 
           var loadGridProperties = function () {
-               //TODO: Replace with real call
-               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getGridJson";
+               var gridJsonUrl = attribs.ws + "/btc-svc/ws/getPlaylistProps/" + attribs.pl;
                $.getJSON(gridJsonUrl, function (data) {
                     loadGridPropertiesSuccess($.parseJSON(data.json));
                })
@@ -261,9 +209,10 @@
                $("#btc-vid-item_" + idx).css("background", "#66cdaa");
           };
 
-          var buildCarousel = function () {
+          var buildCarousel = function (json) {
                var i = 0;
-               $.each(json.grid, function (key, val) {
+               $(".btc-vid-list").html('');
+               $.each(json, function (key, val) {
                     $("<div>", {
                          class: "btc-vid-item",
                          id: "btc-vid-item_" + i,
@@ -286,7 +235,7 @@
                $(".btc-vid-item").bind("click", function (event) {
                     var idx = this.id.split("_")[1];
                     loadSlide(idx);
-                    OO.loadPlaylist({
+                    BTC.loadPlaylist({
                          list: "PLLVtQiMiCJeG_tNuuHw_3ACvXohGh-XGv",
                          listType: "playlist",
                          index: idx
@@ -305,7 +254,7 @@
 
           var loadYTPlayer = function () {
                checkYTPlayerReady(function ($) {
-                    OO = new YT.Player('btc-player-container', {
+                    BTC = new YT.Player('btc-player-container', {
                          playerVars: {
                               listType: 'playlist',
                               list: PL,
@@ -319,21 +268,41 @@
                               'onStateChange': onPlayerStateChange
                          }
                     });
-                    buildCarousel();
-                    loadSlide(0);
                });
+          };
+
+          var loadPlayerPropertiesSuccess = function (json) {
+               var i = 1;
+               $('#pagetitle #comictitle').html(json[0].comic);
+               $('#pagetitle #comictalent').html('with ' + json[0].talent);
+               loadYTPlayer();
+               buildCarousel(json);
+               loadSlide(0);
+          };
+
+          var loadPlayerPropertiesFailure = function (data) {
+               console.log("Error loading player properties", data);
+          };
+
+          var loadPlayerProperties = function () {
+               var playerJsonUrl = attribs.ws + "/btc-svc/ws/getPlaylistProps/" + PL;
+               $.getJSON(playerJsonUrl, function (data) {
+                    loadPlayerPropertiesSuccess($.parseJSON(data.json));
+               })
+                    .fail(function (data) {
+                         loadPlayerPropertiesFailure(data);
+                    });
           };
 
           var loadPlayerTemplateSuccess = function (json) {
                $('#btc_container').html(json);
-               $('#pagetitle #comictitle').html(C);
-               $('#pagetitle #comictalent').html('with ' + T);
                applyStyles();
 
                $('#more-comics-button').click(function () {
                     redirectToBTCPage('home');
+                    return false;
                });
-               loadYTPlayer();
+               loadPlayerProperties();
           };
 
           var loadPlayerTemplateFailure = function (data) {
@@ -350,9 +319,7 @@
                     });
           };
 
-          var PL = getUrlParameter('PL');
-          var C = getUrlParameter('C');
-          var T = getUrlParameter('T');
+          PL = getUrlParameter('PL');
 
           //Remote Calls
           if (PL === '') {
