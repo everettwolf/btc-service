@@ -3,19 +3,16 @@ package com.btc.web.web;
 import com.btc.web.model.ComicsGrid;
 import com.btc.web.model.Playlist;
 import com.btc.web.service.PlaylistService;
+import com.btc.web.service.TemplateService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import it.sauronsoftware.jave.*;
-import org.apache.commons.io.Charsets;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +48,9 @@ public class WebServiceController {
 
      @Autowired
      private PlaylistService playlistService;
+
+     @Autowired
+     private TemplateService templateService;
 
      @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, consumes = {"multipart/*"}, produces = MediaType.APPLICATION_JSON_VALUE)
      public String uploadVideo(@RequestPart("video") MultipartFile video) {
@@ -89,52 +88,17 @@ public class WebServiceController {
 
      @RequestMapping(value = "getGridTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getGridTemplate() throws Exception {
-
-          Resource headerTemplate = new ClassPathResource("grid_assets/header.html");
-          StringWriter header = new StringWriter();
-          IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
-
-          Resource gridTemplate = new ClassPathResource("grid_assets/grid_template.html");
-          StringWriter content = new StringWriter();
-          IOUtils.copy(gridTemplate.getInputStream(), content, Charsets.UTF_8);
-
-          Resource footerTemplate = new ClassPathResource("grid_assets/footer.html");
-          StringWriter footer = new StringWriter();
-          IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
-
-          String returnJson = header.toString() + content.toString() + footer.toString();
-          return new DataBean(returnJson);
+          return new DataBean(templateService.getTemplate(TemplateService.TemplateType.GRID));
      }
 
      @RequestMapping(value = "getPlayerTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getPlayerTemplate() throws Exception {
-
-          Resource headerTemplate = new ClassPathResource("grid_assets/header.html");
-          StringWriter header = new StringWriter();
-          IOUtils.copy(headerTemplate.getInputStream(), header, Charsets.UTF_8);
-
-          Resource playerTemplate = new ClassPathResource("grid_assets/player_template.html");
-          StringWriter content = new StringWriter();
-          IOUtils.copy(playerTemplate.getInputStream(), content, Charsets.UTF_8);
-
-          Resource footerTemplate = new ClassPathResource("grid_assets/footer.html");
-          StringWriter footer = new StringWriter();
-          IOUtils.copy(footerTemplate.getInputStream(), footer, Charsets.UTF_8);
-
-          String returnJson = header.toString() + content.toString() + footer.toString();
-          return new DataBean(returnJson);
+          return new DataBean(templateService.getTemplate(TemplateService.TemplateType.PLAYER));
      }
 
      @RequestMapping(value = "getPlaylistProps/{playlistId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public DataBean getPlaylistProps(@PathVariable(value = "playlistId") String playlistId) throws Exception {
-          //TODO: Remove temp code
-          Playlist playlist = playlistService.findByPlaylistId(playlistId);
-          if (playlist != null) {
-               return new DataBean(playlist.getPlaylistJSON());
-          } else {
-               updatePlaylists();
-               return new DataBean(playlistService.findByPlaylistId(playlistId).getPlaylistJSON());
-          }
+          return new DataBean(playlistService.findByPlaylistId(playlistId).getPlaylistJSON());
      }
 
      @RequestMapping(value = "updatePlaylists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

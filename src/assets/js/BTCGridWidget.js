@@ -84,9 +84,20 @@
                     href: href
                });
           };
+
+          //Load Additional Javascript
+          var loadJS = function (src) {
+               var jsLink = $("<script type='text/javascript' src='" + src + "'>");
+               $("head").append(jsLink);
+          };
+
           //bootstrap css
           loadCSS(attribs.env + '/assets/css/style.css');
           loadCSS('http://fonts.googleapis.com/css?family=Permanent+Marker');
+          loadCSS('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+
+          //Center grid ad
+          loadJS(attribs.env + '/assets/js/gridad.js');
 
           var applyStyles = function () {
                if (attribs.style === 'website') {
@@ -112,7 +123,7 @@
 
           var redirectToBTCPage = function (url, comic, talent) {
                if (attribs.refresh === 'true') {
-                    var param = url === 'home' ? '' : '?PL=' + url + '&C=' + encodeURIComponent(comic) + '&T=' + encodeURIComponent(talent) + '#btc-edge-top';
+                    var param = url === 'home' ? '' : '?PL=' + url;
                     var protocol = window.location.protocol + '//';
                     var hostname = window.location.hostname;
                     var port = window.location.port !== "" ? ":" + window.location.port : "";
@@ -146,6 +157,7 @@
                          "<div class='voice'>" + talent + "</div>" +
                          "</div>";
                     $("#vid-item" + i).html(slide);
+                    $("#btc-gridad").html(gridad);
 
                     var vid = "#vid-item" + i;
 
@@ -192,21 +204,12 @@
                     });
           };
 
-          var loadPlayer = function () {
-               var player = '<video id="movie" preload controls=true autoplay poster="' + attribs.env + PL + '.png"> \
-                                   <source src="' + attribs.env + PL + '.webm" type="video/webm; codecs=vp8,vorbis" /> \
-                                   <source src="' + attribs.env + PL + '.ogv" type="video/ogg; codecs=theora,vorbis" /> \
-                                   <source src="' + attribs.env + PL + '.mp4" /> \
-                              </video>';
-               $("#btc-player-container").html(player);
-          };
-
           var loadSlide = function (idx) {
                var comic_info = $("#btc-vid-item_" + idx).data();
                $(".comic").html(comic_info.comic);
                $(".talent").html(comic_info.talent);
                $(".btc-vid-item").css("background", "#fff");
-               $("#btc-vid-item_" + idx).css("background", "#66cdaa");
+               $("#btc-vid-item_" + idx).css("background", "#f0f9ff");
           };
 
           var buildCarousel = function (json) {
@@ -302,6 +305,7 @@
                     redirectToBTCPage('home');
                     return false;
                });
+               $d.getElementById('btc-main-container').scrollIntoView(true);
                loadPlayerProperties();
           };
 

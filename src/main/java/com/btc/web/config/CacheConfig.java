@@ -22,6 +22,7 @@ public class CacheConfig {
 
           List<String> caches = new ArrayList<>();
           caches.add("playlists");
+          caches.add("templates");
 
           concurrentMapCacheManager.setCacheNames(caches);
           return concurrentMapCacheManager;
