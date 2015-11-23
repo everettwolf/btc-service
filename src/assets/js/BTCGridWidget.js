@@ -72,7 +72,7 @@
           content.parentNode.insertBefore(container_div, content);
 
           //Initialize global variables
-          var BTC, PL;
+          var BTC, PL, C;
 
           //Load Stylesheets
           var loadCSS = function (href) {
@@ -208,14 +208,18 @@
                var comic_info = $("#btc-vid-item_" + idx).data();
                $(".comic").html(comic_info.comic);
                $(".talent").html(comic_info.talent);
-               $(".btc-vid-item").css("background", "#fff");
+               $(".btc-vid-item").css("background", "");
                $("#btc-vid-item_" + idx).css("background", "#f0f9ff");
           };
 
           var buildCarousel = function (json) {
                var i = 0;
+               var carouselWidth = 0;
+               C = 0;
                $(".btc-vid-list").html('');
                $.each(json, function (key, val) {
+                    carouselWidth += 154 * 2;
+                    console.log("carouselWidth", carouselWidth);
                     $("<div>", {
                          class: "btc-vid-item",
                          id: "btc-vid-item_" + i,
@@ -235,6 +239,10 @@
                     i++;
                });
 
+               if (carouselWidth > 1232) {
+                    $(".btc-arrow-right").css("display", "inline");
+               }
+
                $(".btc-vid-item").bind("click", function (event) {
                     var idx = this.id.split("_")[1];
                     loadSlide(idx);
@@ -244,6 +252,30 @@
                          index: idx
                     })
 
+               });
+
+               $(".btc-arrow-right").bind("click", function (event) {
+                    var scrollLength = 154;
+                    console.log($(".btc-vid-list-container").left);
+                    event.preventDefault();
+                    $(".btc-vid-list-container").stop().animate({
+                         scrollLeft: "+=" + scrollLength
+                    }, 750);
+                    C += scrollLength;
+                    $(".btc-arrow-left").css("display", "inline");
+
+               });
+
+               $(".btc-arrow-left").bind("click", function (event) {
+                    var scrollLength = 154;
+                    event.preventDefault();
+                    $(".btc-vid-list-container").stop().animate({
+                         scrollLeft: "-=" + scrollLength
+                    }, 750);
+                    C -= scrollLength;
+                    if (C <= 0) {
+                         $(".btc-arrow-left").css("display", "none");
+                    }
                });
           };
 

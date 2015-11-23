@@ -1,4 +1,4 @@
-@media only screen and (max-width:479px) {
+@media only screen and (max-width: 479px) {
      #btc-main-container {
           max-width: 300px;
      }
@@ -74,6 +74,7 @@
      #comictitle {
           font-size: 30px;
      }
+
      #comictalent {
           font-size: 20px;
      }
@@ -84,20 +85,25 @@
           /*min-width: 655px;*/
           max-width: 1000px;
      }
+
      #btc-top-header {
           height: 110px;
      }
+
      #pageblurb {
           font-size: 25px;
      }
+
      .featured .vid-item {
           width: 49%;
           min-width: 300px;
      }
+
      .regular .vid-item {
           width: 32%;
           min-width: 195px;
      }
+
      .regular .btc-ad-unit-small {
           width: 32%;
      }
@@ -107,9 +113,11 @@
           height: 340px;
           margin: 0 auto;
      }
+
      #comictitle {
           font-size: 30px;
      }
+
      #comictalent {
           font-size: 20px;
      }
@@ -563,15 +571,15 @@ ins {
 }
 
 .btc-vid-list-container {
-     width: 92%;
+     width: 96%;
      overflow: hidden;
-     margin-top: 20px;
-     margin-left: 4%;
+     margin-top: 10px;
+     margin-left: 3px;
      padding-bottom: 20px;
 }
 
 .btc-vid-list {
-     width: 1344px;
+     width: 1386px;
      position: relative;
      top: 0;
      left: 0;
@@ -582,7 +590,7 @@ ins {
      width: 148px;
      height: 128px;
      float: left;
-     margin: 5px;
+     margin: 3px;
      padding: 10px;
      background: #fff;
      font-family: 'Permanent Marker', cursive;
@@ -618,31 +626,40 @@ ins {
 }
 
 .btc-arrow-left {
-     color: #fff;
+     color: #404040;
      position: absolute;
-     background: #777;
-     padding: 15px;
-     left: -5px;
-     top: -130px;
+     background: rgba(96, 96, 96, 0.5);
      z-index: 99;
      cursor: pointer;
+     top: -151px;
+     left: 6px;
+     line-height: 128px;
+     height: 128px;
+     width: 18px;
+     display: none;
 }
 
 .btc-arrow-right {
-     color: #fff;
+     color: #404040;
      position: absolute;
-     background: #777;
-     padding: 15px;
-     right: -5px;
-     top: -130px;
-     z-index: 100;
+     background: rgba(96, 96, 96, 0.5);
+     right: 24px;
+     top: -151px;
+     z-index: 99;
      cursor: pointer;
+     line-height: 128px;
+     height: 128px;
+     width: 18px;
+     text-align: right;
+     display: none;
 }
 
 .btc-arrow-left:hover {
-     background: #CC181E;
+     background: rgba(255, 255, 255, 0.50);
+     color: #CC181E;
 }
 
 .btc-arrow-right:hover {
-     background: #CC181E;
+     background: rgba(255, 255, 255, 0.50);
+     color: #CC181E;
 }

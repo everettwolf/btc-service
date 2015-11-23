@@ -89,6 +89,15 @@
      </footer>
 </div>
 <!--! end of #container -->
+<script type="text/javascript">
+     $('#container').css('opacity', 0);
+     $(window).load(function () {
+          $('#container').css('opacity', 1);
+     });
+     $(document).ready(function () {
+          setTimeout('$("#container").css("opacity", 1)', 500);
+     });
+</script>
 
 <script>
      /**
