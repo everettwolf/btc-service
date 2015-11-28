@@ -157,7 +157,7 @@
                          "<div class='voice'>" + talent + "</div>" +
                          "</div>";
                     $("#vid-item" + i).html(slide);
-                    $("#btc-gridad").html(gridad);
+                    $("#btc-gridad").html("Grid Ad");
 
                     var vid = "#vid-item" + i;
 
