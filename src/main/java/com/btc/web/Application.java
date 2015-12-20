@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.AbstractJsonpResponseBodyAdvice;
 
@@ -17,11 +18,9 @@ import java.util.Collections;
 /**
  * Created by Chris on 9/12/14.
  */
-//@Configuration
-//@EnableAutoConfiguration
 @EnableJpaRepositories
+@EnableScheduling
 @SpringBootApplication
-//@ComponentScan(value = "com.btc.web")
 public class Application {
 
      @Value("${db.auto}")

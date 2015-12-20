@@ -11,78 +11,92 @@ sourceCompatibility = 1.8
 version = '1.0'
 
 compileJava {
-     allprojects {
-          tasks.withType(JavaCompile) {
-               options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-          }
-     }
+    allprojects {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+        }
+    }
 }
 
 buildscript {
-     repositories {
-          mavenCentral()
-     }
-     dependencies {
-          classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
-     }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE")
+    }
 }
 
 
 ext {
-     springBootVersion = "1.2.2.RELEASE"
-     springSecurityVersion = "3.2.4.RELEASE"
-     springContextVersion = "4.2.2.RELEASE"
-     plexusCoreVersion = "1.0"
-     janinoVersion = "2.7.5"
-     mysqlConnectorVersion = "5.1.8"
-     hsqldbVersion = "2.3.2"
-     commonsDbcpVersion = "1.4"
-     guavaVersion = "18.0"
-     lombokVersion = "1.12.6"
-     commonsIOVersion = "2.4"
-     gsonVersion = "2.4"
-     orgJsonVersion = "20150729"
-     ehcacheVersion = "2.6.11"
+    springBootVersion = "1.2.2.RELEASE"
+    springSecurityVersion = "3.2.4.RELEASE"
+    springContextVersion = "4.2.2.RELEASE"
+    plexusCoreVersion = "1.0"
+    janinoVersion = "2.7.5"
+    mysqlConnectorVersion = "5.1.8"
+    hsqldbVersion = "2.3.2"
+    commonsDbcpVersion = "1.4"
+    guavaVersion = "18.0"
+    lombokVersion = "1.12.6"
+    commonsIOVersion = "2.4"
+    gsonVersion = "2.4"
+    orgJsonVersion = "20150729"
+    ehcacheVersion = "2.6.11"
+    youTubeClientAPIVersion = "1.19.1"
+    quartzSchedulerVersion = "2.1.5"
 }
 
 repositories {
-     mavenCentral()
-     mavenLocal()
+    mavenCentral()
+    mavenLocal()
 
 }
 
 dependencies {
-     compile "org.springframework:spring-context:$springContextVersion"
-     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
-     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion", {
-          exclude group: "org.apache.tomcat.embed"
-     }
-     compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
-          exclude group: "org.apache.tomcat.embed"
-     }
-     compile "org.springframework.security:spring-security-core:$springSecurityVersion"
-     compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    //Spring
+    compile "org.springframework:spring-context:$springContextVersion"
+    compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion", {
+        exclude group: "org.apache.tomcat.embed"
+    }
+    compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
+        exclude group: "org.apache.tomcat.embed"
+    }
+    compile "org.springframework.security:spring-security-core:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
 
-     compile "org.codehaus.janino:janino:$janinoVersion"
+    //Miscellaneous
+    compile "org.codehaus.janino:janino:$janinoVersion"
+    compile "commons-io:commons-io:$commonsIOVersion"
 
-     // database
-     compile "commons-dbcp:commons-dbcp:$commonsDbcpVersion"
-     compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
-     compile "org.hsqldb:hsqldb:$hsqldbVersion"
+    //Database
+    compile "commons-dbcp:commons-dbcp:$commonsDbcpVersion"
+    compile "mysql:mysql-connector-java:$mysqlConnectorVersion"
+    compile "org.hsqldb:hsqldb:$hsqldbVersion"
 
-     compile "jave:jave:1.0.2"
+    //Scheduling
+    compile "org.quartz-scheduler:quartz:$quartzSchedulerVersion"
 
-     //Guava
-     compile "com.google.guava:guava:$guavaVersion"
+    //Guava
+    compile "com.google.guava:guava:$guavaVersion"
 
-     //JSON
-     compile "com.google.code.gson:gson:$gsonVersion"
-     compile "org.json:json:$orgJsonVersion"
+    //JSON
+    compile "com.google.code.gson:gson:$gsonVersion"
+    compile "org.json:json:$orgJsonVersion"
 
-     //Cacheing
-     compile "net.sf.ehcache:ehcache-core:$ehcacheVersion"
+    //Cacheing
+    compile "net.sf.ehcache:ehcache-core:$ehcacheVersion"
 
-     compile "org.projectlombok:lombok:$lombokVersion"
+    //Lombok
+    compile "org.projectlombok:lombok:$lombokVersion"
 
-     compile "commons-io:commons-io:$commonsIOVersion"
+    //YouTube API
+    compile "com.google.api-client:google-api-client:$youTubeClientAPIVersion"
+    compile 'com.google.apis:google-api-services-youtube:v3-rev153-1.21.0'
+    compile 'com.google.auth:google-auth-library-oauth2-http:0.3.1'
+    compile 'com.google.apis:google-api-services-plus:v1-rev137-1.19.0'
+
+
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.18.0-rc'
 }
