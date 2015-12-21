@@ -104,7 +104,7 @@ public class YouTubeService {
 
             // Print data about the newly inserted video from the API response.
             System.out.println("\n================== Returned Video ==================\n");
-            System.out.println("  - Id: " + returnedVideo.getId());
+            System.out.println("  - id: " + returnedVideo.getId());
             System.out.println("  - Title: " + returnedVideo.getSnippet().getTitle());
             System.out.println("  - Tags: " + returnedVideo.getSnippet().getTags());
             System.out.println("  - Privacy Status: " + returnedVideo.getStatus().getPrivacyStatus());

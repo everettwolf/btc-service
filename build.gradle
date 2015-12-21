@@ -32,6 +32,7 @@ ext {
     springBootVersion = "1.2.2.RELEASE"
     springSecurityVersion = "3.2.4.RELEASE"
     springContextVersion = "4.2.2.RELEASE"
+    springContextSupportVersion = "4.2.4.RELEASE"
     plexusCoreVersion = "1.0"
     janinoVersion = "2.7.5"
     mysqlConnectorVersion = "5.1.8"
@@ -45,6 +46,7 @@ ext {
     ehcacheVersion = "2.6.11"
     youTubeClientAPIVersion = "1.19.1"
     quartzSchedulerVersion = "2.1.5"
+    javaMailVersion = "1.4.6"
 }
 
 repositories {
@@ -56,6 +58,7 @@ repositories {
 dependencies {
     //Spring
     compile "org.springframework:spring-context:$springContextVersion"
+    compile "org.springframework:spring-context-support:$springContextSupportVersion"
     compile "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion", {
         exclude group: "org.apache.tomcat.embed"
@@ -90,6 +93,9 @@ dependencies {
 
     //Lombok
     compile "org.projectlombok:lombok:$lombokVersion"
+
+    //Mail
+    compile "javax.mail:mail:$javaMailVersion"
 
     //YouTube API
     compile "com.google.api-client:google-api-client:$youTubeClientAPIVersion"

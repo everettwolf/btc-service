@@ -101,24 +101,61 @@ public class PlaylistService {
         }
     }
 
-    public String getVideoIdFromWidgetFeed() {
+    public boolean deletePlaylistItem(String id) throws Exception {
 
-        String videoId = "";
+        try {
+            YouTube.PlaylistItems.Delete playlistItemDeleteCommand = youtube.playlistItems().delete(id);
+            playlistItemDeleteCommand.execute();
+
+            logger.info("Deleted playlist item: {}", id);
+
+            return true;
+        } catch (Exception e) {
+            logger.error("Error updating widget {}", e.getMessage());
+
+            return false;
+        }
+    }
+
+    public WidgetFeedReturn getWidgetFeedInfo() {
+
+        WidgetFeedReturn widgetFeedReturn = new WidgetFeedReturn();
         JsonArray widgetFeedJsonArray = getPlaylistItemsByPlaylistId(playlistWidgetFeed)
                 .getAsJsonArray("items");
 
+        widgetFeedReturn.setPlaylistCount(widgetFeedJsonArray.size());
+
         if (widgetFeedJsonArray.size() > 0) {
-            videoId = widgetFeedJsonArray
+            widgetFeedReturn.setId(widgetFeedJsonArray
+                    .get(0)
+                    .getAsJsonObject()
+                    .get("id")
+                    .getAsString());
+            JsonObject snippet = widgetFeedJsonArray
                     .get(0)
                     .getAsJsonObject()
                     .get("snippet")
-                    .getAsJsonObject()
+                    .getAsJsonObject();
+            widgetFeedReturn.setVideoId(snippet
                     .get("resourceId")
                     .getAsJsonObject()
                     .get("videoId")
-                    .getAsString();
+                    .getAsString());
+            widgetFeedReturn.setVideoTitle(snippet
+                    .get("title")
+                    .getAsString());
+            widgetFeedReturn.setVideoJoke(snippet
+                    .get("description")
+                    .getAsString());
+            widgetFeedReturn.setVideoThumbnail(snippet
+                    .get("thumbnails")
+                    .getAsJsonObject()
+                    .get("medium")
+                    .getAsJsonObject()
+                    .get("url")
+                    .getAsString());
         }
-        return videoId;
+        return widgetFeedReturn;
     }
 
     public JsonObject getAllPlaylistsForChannel() {
