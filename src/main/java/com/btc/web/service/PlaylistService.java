@@ -20,7 +20,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -45,7 +44,7 @@ public class PlaylistService {
     @Value("${yt.channel}")
     private String youTubeChannel;
 
-    @PostConstruct
+//    @PostConstruct
     private void init() throws Exception {
         List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 

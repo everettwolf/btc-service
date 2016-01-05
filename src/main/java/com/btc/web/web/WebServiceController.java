@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +36,7 @@ public class WebServiceController {
 
     @JsonAutoDetect(fieldVisibility = ANY)
     static class DataBean {
+
         String json;
 
         public DataBean(String str) {
@@ -51,40 +49,6 @@ public class WebServiceController {
 
     @Autowired
     private TemplateService templateService;
-
-//     @RequestMapping(value = "/uploadVideo", method = RequestMethod.POST, consumes = {"multipart/*"}, produces = MediaType.APPLICATION_JSON_VALUE)
-//     public String uploadVideo(@RequestPart("video") MultipartFile video) {
-//
-//          try {
-//               File sourceFile = convert(video);
-//               Encoder encoder = new Encoder();
-//               MultimediaInfo multimediaInfo = encoder.getInfo(sourceFile);
-//               VideoInfo videoInfo = multimediaInfo.getVideo();
-//
-//               String format = multimediaInfo.getFormat();
-//               AudioInfo audioInfo = multimediaInfo.getAudio();
-//
-//
-//               File targetFile = new File("/Users/Chris/beesting.mp4");
-//               AudioAttributes audioAttributes = new AudioAttributes();
-//               audioAttributes.setCodec("libvorbis");
-//               VideoAttributes videoAttributes = new VideoAttributes();
-//               videoAttributes.setCodec("mpeg4");
-//               videoAttributes.setTag("DIVX");
-//               videoAttributes.setBitRate(new Integer(160000));
-//               videoAttributes.setFrameRate(new Integer(30));
-//               EncodingAttributes attrs = new EncodingAttributes();
-//               attrs.setFormat("mpegvideo");
-//               attrs.setAudioAttributes(audioAttributes);
-//               attrs.setVideoAttributes(videoAttributes);
-//               encoder.encode(sourceFile, targetFile, attrs);
-//               return "good";
-//          } catch (Exception e) {
-//               // throw (new RuntimeException("problem uploading file"));
-//               return "bad";
-//          }
-//
-//     }
 
     @RequestMapping(value = "getTemplate", produces = MediaType.APPLICATION_JSON_VALUE)
     public DataBean getTemplate(@RequestParam("templateType") TemplateService.TemplateType templateType) throws Exception {
@@ -175,15 +139,6 @@ public class WebServiceController {
 
         }
 
-    }
-
-    private File convert(MultipartFile file) throws Exception {
-        File convFile = new File(file.getOriginalFilename());
-        convFile.createNewFile();
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(file.getBytes());
-        fos.close();
-        return convFile;
     }
 
 }
