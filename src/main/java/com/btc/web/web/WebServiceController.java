@@ -105,6 +105,7 @@ public class WebServiceController {
 
                 String comic = snippet.get("title").getAsString();
                 String joke = snippet.get("description").getAsString();
+                String publishedAt = snippet.get("publishedAt").getAsString();
 
                 String thumb = snippet.get("thumbnails")
                         .getAsJsonObject()
@@ -125,6 +126,7 @@ public class WebServiceController {
                 comicsGrid.setThumb(thumb);
                 comicsGrid.setVideoId(videoId);
                 comicsGrid.setTalent(talent);
+                comicsGrid.setPublishedAt(publishedAt);
                 comicsGridList.add(comicsGrid);
             }
 

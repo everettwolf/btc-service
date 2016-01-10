@@ -14,4 +14,5 @@ public class ComicsGrid {
      private String comic;
      private String joke;
      private String talent;
+     private String publishedAt;
 }
