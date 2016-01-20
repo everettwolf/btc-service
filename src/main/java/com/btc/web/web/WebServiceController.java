@@ -5,6 +5,8 @@ import com.btc.web.model.Playlist;
 import com.btc.web.service.PlaylistService;
 import com.btc.web.service.TemplateService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,11 +62,77 @@ public class WebServiceController {
     }
 
     @Transactional
-    @RequestMapping(value = "updatePlaylists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public void updatePlaylists() throws Exception {
+    @RequestMapping(value = "updatePlaylist/{playlistId", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updatePlaylist(@PathVariable(value = "playlistId") String playListId) throws Exception {
 
-        List<ComicsGrid> comicsGridList;
-        Map<String, String> playlistMap = new HashMap<>();
+        BiMap<String, String> playlistMap = getPlaylistMap();
+
+        List<ComicsGrid> comicsGridList = new ArrayList<>();
+        JsonObject jsonObject = playlistService.getPlaylistItemsByPlaylistId(playListId);
+        JsonArray jsonArray = jsonObject.getAsJsonArray("items");
+
+        for (int j = 0; j < jsonArray.size(); j++) {
+
+            ComicsGrid comicsGrid = new ComicsGrid();
+
+            JsonObject item = jsonArray.get(j).getAsJsonObject();
+
+            logger.info("Grid item: {}", item.toString());
+
+            JsonObject snippet = item.get("snippet").getAsJsonObject();
+
+            String comic = snippet.get("title").getAsString();
+            String joke = snippet.get("description").getAsString();
+            String publishedAt = snippet.get("publishedAt").getAsString();
+
+            String thumb = snippet.get("thumbnails")
+                    .getAsJsonObject()
+                    .get("medium")
+                    .getAsJsonObject()
+                    .get("url").getAsString();
+
+            String videoId = snippet.get("resourceId")
+                    .getAsJsonObject()
+                    .get("videoId")
+                    .getAsString();
+
+            String talent = playlistService.getTalentByVideoId(videoId);
+
+            comicsGrid.setPlaylistId(playlistMap.get(comic));
+            comicsGrid.setComic(comic);
+            comicsGrid.setJoke(joke);
+            comicsGrid.setThumb(thumb);
+            comicsGrid.setVideoId(videoId);
+            comicsGrid.setTalent(talent);
+            comicsGrid.setPublishedAt(publishedAt);
+            comicsGridList.add(comicsGrid);
+        }
+
+        Playlist playlist = playlistService.findByPlaylistId(playListId);
+        if (playlist != null) playlistService.deleteByPlaylistId(playListId);
+
+        playlist = new Playlist();
+        playlist.setPlaylistId(playListId);
+        playlist.setPlaylistName(playlistMap.inverse().get(playListId));
+        playlist.setPlaylistJSON(new Gson().toJson(comicsGridList));
+        playlistService.save(playlist);
+    }
+
+    @Transactional
+    @RequestMapping(value = "updateAllPlaylists", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void updateAllPlaylists() throws Exception {
+
+        Map<String, String> playlistMap = getPlaylistMap();
+
+        for (Map.Entry<String, String> entry : playlistMap.entrySet()) {
+            updatePlaylist(entry.getValue());
+        }
+
+    }
+
+    BiMap<String, String> getPlaylistMap() {
+
+        BiMap<String, String> playlistMap = HashBiMap.create();
         JsonObject playlistJsonObject = playlistService.getAllPlaylistsForChannel();
         JsonArray playlistJsonArray = playlistJsonObject.getAsJsonArray("items");
 
@@ -86,61 +153,8 @@ public class WebServiceController {
 
             );
         }
-
-        for (Map.Entry<String, String> entry : playlistMap.entrySet()) {
-
-            comicsGridList = new ArrayList<>();
-            JsonObject jsonObject = playlistService.getPlaylistItemsByPlaylistId(entry.getValue());
-            JsonArray jsonArray = jsonObject.getAsJsonArray("items");
-
-            for (int j = 0; j < jsonArray.size(); j++) {
-
-                ComicsGrid comicsGrid = new ComicsGrid();
-
-                JsonObject item = jsonArray.get(j).getAsJsonObject();
-
-                logger.info("Grid item: {}", item.toString());
-
-                JsonObject snippet = item.get("snippet").getAsJsonObject();
-
-                String comic = snippet.get("title").getAsString();
-                String joke = snippet.get("description").getAsString();
-                String publishedAt = snippet.get("publishedAt").getAsString();
-
-                String thumb = snippet.get("thumbnails")
-                        .getAsJsonObject()
-                        .get("medium")
-                        .getAsJsonObject()
-                        .get("url").getAsString();
-
-                String videoId = snippet.get("resourceId")
-                        .getAsJsonObject()
-                        .get("videoId")
-                        .getAsString();
-
-                String talent = playlistService.getTalentByVideoId(videoId);
-
-                comicsGrid.setPlaylistId(playlistMap.get(comic));
-                comicsGrid.setComic(comic);
-                comicsGrid.setJoke(joke);
-                comicsGrid.setThumb(thumb);
-                comicsGrid.setVideoId(videoId);
-                comicsGrid.setTalent(talent);
-                comicsGrid.setPublishedAt(publishedAt);
-                comicsGridList.add(comicsGrid);
-            }
-
-            Playlist playlist = playlistService.findByPlaylistId(entry.getValue());
-            if (playlist != null) playlistService.deleteByPlaylistId(entry.getValue());
-
-            playlist = new Playlist();
-            playlist.setPlaylistId(entry.getValue());
-            playlist.setPlaylistName(entry.getKey());
-            playlist.setPlaylistJSON(new Gson().toJson(comicsGridList));
-            playlistService.save(playlist);
-
-        }
-
+        return playlistMap;
     }
+
 
 }

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Shared class used by every sample. Contains methods for authorizing a user and caching credentials.
  */
-public class Auth {
+public class YouTubeAuth {
 
 
     public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
@@ -42,15 +42,18 @@ public class Auth {
     public static Credential authorize(List<String> scopes, String credentialDatastore) throws Exception {
 
         // Load client secrets.
-        Reader clientSecretReader = new InputStreamReader(Auth.class.getResourceAsStream("/client_secrets.json"));
+        Reader clientSecretReader = new InputStreamReader(YouTubeAuth.class.getResourceAsStream("/client_secrets.json"));
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
 
         // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
-        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
+        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(CREDENTIALS_DIRECTORY));
         DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(credentialDatastore);
 
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes).setCredentialDataStore(datastore)
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow
+                .Builder(HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, scopes)
+                .setCredentialDataStore(datastore)
+                .setAccessType("offline")
+                .setApprovalPrompt("force")
                 .build();
 
         // Build the local server and bind it to port 8080

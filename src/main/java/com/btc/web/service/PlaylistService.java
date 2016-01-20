@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -44,15 +45,17 @@ public class PlaylistService {
     @Value("${yt.channel}")
     private String youTubeChannel;
 
-//    @PostConstruct
+    @PostConstruct
     private void init() throws Exception {
         List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
-        Credential credential = Auth.authorize(scopes, "playlistupdates");
+        logger.info("Getting the YouTube Authorization credentials.");
+        Credential credential = YouTubeAuth.authorize(scopes, "playlistupdates");
         youtube = new YouTube
-                .Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+                .Builder(YouTubeAuth.HTTP_TRANSPORT, YouTubeAuth.JSON_FACTORY, credential)
                 .setApplicationName("Beyond the Comics")
                 .build();
+        logger.info("Successfully retrieved the YouTube Authorization credentials.");
     }
 
     @Cacheable(value = "playlists", key = "#playlistId")

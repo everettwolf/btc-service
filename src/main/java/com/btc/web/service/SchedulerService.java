@@ -49,10 +49,11 @@ public class SchedulerService {
         if (emailEnable) {
 
             WidgetFeedReturn widgetFeedReturn = playlistService.getWidgetFeedInfo();
-            if (widgetFeedReturn != null
+            if (widgetFeedReturn.getPlaylistCount() > 0
                     && playlistService.insertPlaylistItem(playlistWidget, widgetFeedReturn.getVideoId())
                     && playlistService.deletePlaylistItem(widgetFeedReturn.getId())) {
-                //ws.updatePlaylists();
+                //ws.updateAllPlaylists();
+                ws.updatePlaylist(playlistWidget);
                 widgetFeedReturn.setSuccess(true);
                 widgetFeedReturn.setMessage(new StringBuilder()
                         .append("Widget updated with '")

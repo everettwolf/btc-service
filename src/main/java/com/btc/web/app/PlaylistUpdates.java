@@ -1,7 +1,7 @@
 package com.btc.web.app;
 
 
-import com.btc.web.service.Auth;
+import com.btc.web.service.YouTubeAuth;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.youtube.YouTube;
@@ -45,10 +45,10 @@ public class PlaylistUpdates {
 
         try {
             // Authorize the request.
-            Credential credential = Auth.authorize(scopes, "playlistupdates");
+            Credential credential = YouTubeAuth.authorize(scopes, "playlistupdates");
 
             // This object is used to make YouTube Data API requests.
-            youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+            youtube = new YouTube.Builder(YouTubeAuth.HTTP_TRANSPORT, YouTubeAuth.JSON_FACTORY, credential)
                     .setApplicationName("Beyond the Comics")
                     .build();
 
