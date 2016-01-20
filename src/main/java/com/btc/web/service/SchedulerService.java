@@ -26,8 +26,11 @@ public class SchedulerService {
     @Value("${playlist.widget}")
     private String playlistWidget;
 
-    @Value("${email.enable}")
+    @Value("${scheduler.enabled}")
     private boolean emailEnable;
+
+    @Value("${scheduler.cron}")
+    private String cronSchedule;
 
     @Autowired
     private PlaylistService playlistService;
@@ -41,7 +44,7 @@ public class SchedulerService {
     private final static Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
     //@Scheduled(cron = "0 0 0 1/1 * ? *") //Midnight daily
-    @Scheduled(cron = "0/10 * * * * ?")
+    @Scheduled(cron = "${scheduler.cron}")
     public void updateWidget() throws Exception {
         if (emailEnable) {
 

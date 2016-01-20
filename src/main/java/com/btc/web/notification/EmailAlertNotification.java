@@ -16,13 +16,13 @@ import java.util.Map;
 @Component
 public class EmailAlertNotification extends AbstractEmailNotification {
 
-    @Value("${email.alert.subject}")
+    @Value("${scheduler.email.alert.subject}")
     private String emailAlertSubject;
 
-    @Value("${email.alert.recipient.list}")
+    @Value("${scheduler.email.alert.recipient.list}")
     private String emailAlertRecipientList;
 
-    @Value("${email.enabled}")
+    @Value("${scheduler.email.enabled}")
     private Boolean emailEnabled;
 
     private Resource emailTemplate = new ClassPathResource("META-INF/email/alert_message.html");

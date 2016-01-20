@@ -69,3 +69,5 @@ activemq-data/
 atlassian-ide-plugin.xml
 .gradle
 
+application.yml
+

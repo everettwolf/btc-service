@@ -1,7 +1,6 @@
 package com.btc.web;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
@@ -24,9 +23,6 @@ import java.util.Collections;
 @EnableTransactionManagement
 @SpringBootApplication
 public class Application {
-
-     @Value("${db.auto}")
-     private boolean dbAuto;
 
      @ControllerAdvice
      static class JsonpAdvice extends AbstractJsonpResponseBodyAdvice {
