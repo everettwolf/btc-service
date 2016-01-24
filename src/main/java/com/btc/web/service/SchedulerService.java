@@ -43,7 +43,6 @@ public class SchedulerService {
 
     private final static Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
-    //@Scheduled(cron = "0 0 0 1/1 * ? *") //Midnight daily
     @Scheduled(cron = "${scheduler.cron}")
     public void updateWidget() throws Exception {
         if (emailEnable) {
