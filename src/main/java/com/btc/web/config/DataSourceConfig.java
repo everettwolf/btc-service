@@ -50,7 +50,10 @@ public class DataSourceConfig {
         dataSource.setUsername(env.getProperty("btc_svc.database.username"));
         dataSource.setPassword(env.getProperty("btc_svc.database.password"));
         dataSource.setTestOnBorrow(true);
-        //dataSource.setValidationQuery("SELECT 1");
+        dataSource.setValidationQuery("SELECT 1");
+        dataSource.setTestWhileIdle(true);
+        dataSource.setTestOnBorrow(true);
+        dataSource.setValidationQueryTimeout(0);
         return dataSource;
     }
 

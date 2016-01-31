@@ -3,14 +3,14 @@ package com.btc.web.service;
 import com.btc.web.model.Playlist;
 import com.btc.web.model.repository.PlaylistRepository;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.PlaylistItem;
-import com.google.api.services.youtube.model.PlaylistItemSnippet;
-import com.google.api.services.youtube.model.ResourceId;
+import com.google.api.services.youtube.model.*;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Chris on 11/14/15.
@@ -44,6 +47,12 @@ public class PlaylistService {
 
     @Value("${yt.channel}")
     private String youTubeChannel;
+
+    @Data
+    public class TalentAndDate {
+        String talent = "Unknown";
+        String date = "1/1/1900";
+    }
 
     @PostConstruct
     private void init() throws Exception {
@@ -71,6 +80,16 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
+    @CacheEvict(value = "playlists", allEntries = true)
+    public void evictAllPlaylists() {
+        logger.info("All playlists evicted.");
+    }
+
+    @CacheEvict(value = "playlists", key = "#playlistId")
+    public void evictPlaylist(String playlistId) {
+        logger.info("Playlist {} evicted", playlistId);
+    }
+
     public void deleteByPlaylistId(String playlistId) {
         playlistRepository.deleteByPlaylistId(playlistId);
     }
@@ -78,6 +97,30 @@ public class PlaylistService {
     public boolean insertPlaylistItem(String playlistId, String videoId) throws Exception {
 
         try {
+
+            YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet").setId(videoId);
+            VideoListResponse videoListResponse = listVideosRequest.execute();
+
+            List<Video> videoList = videoListResponse.getItems();
+            if (videoList.isEmpty()) {
+                logger.error("Can't find a video with ID {}", videoId);
+                return false;
+            }
+            Video video = videoList.get(0);
+
+            VideoRecordingDetails videoRecordingDetails = video.getRecordingDetails();
+            if (videoRecordingDetails == null) {
+                videoRecordingDetails = new VideoRecordingDetails();
+            }
+            Date date = Calendar.getInstance().getTime();
+
+            videoRecordingDetails.setRecordingDate(new DateTime(Calendar.getInstance().getTime(), TimeZone.getTimeZone("America/Los_Angeles")));
+            video.setRecordingDetails(videoRecordingDetails);
+
+            YouTube.Videos.Update updateVideosRequest = youtube.videos().update("snippet,recordingDetails", video);
+            Video videoResponse = updateVideosRequest.execute();
+            logger.info("Video date set to: {}", videoResponse.getRecordingDetails().getRecordingDate());
+
             ResourceId resourceId = new ResourceId();
             resourceId.setKind("youtube#video");
             resourceId.setVideoId(videoId);
@@ -178,9 +221,9 @@ public class PlaylistService {
         return new JsonParser().parse(result).getAsJsonObject();
     }
 
-    public String getTalentByVideoId(String videoId) {
+    public TalentAndDate getTalentAndDateByVideoId(String videoId) {
 
-        String uri = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=" + videoId + "&maxResults=50&key=" + youTubeKey;
+        String uri = "https://www.googleapis.com/youtube/v3/videos?part=snippet,recordingDetails&id=" + videoId + "&maxResults=50&key=" + youTubeKey;
         RestTemplate restTemplate = new RestTemplate();
 
         try {
@@ -189,15 +232,24 @@ public class PlaylistService {
             JsonObject jsonObject = new JsonParser().parse(result).getAsJsonObject();
             JsonArray jsonArray = jsonObject.getAsJsonArray("items");
 
-            return jsonArray.get(0).getAsJsonObject()
+            TalentAndDate talentAndDate = new TalentAndDate();
+            talentAndDate.setTalent(jsonArray.get(0).getAsJsonObject()
                     .get("snippet")
                     .getAsJsonObject()
                     .get("tags")
                     .getAsJsonArray()
                     .get(0)
-                    .getAsString();
+                    .getAsString());
+            talentAndDate.setDate(jsonArray.get(0).getAsJsonObject()
+                    .get("recordingDetails")
+                    .getAsJsonObject()
+                    .get("recordingDate")
+                    .getAsString());
+
+            return talentAndDate;
+
         } catch (Exception e) {
-            return "Unknown";
+            return new TalentAndDate();
         }
     }
 

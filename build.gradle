@@ -45,6 +45,8 @@ ext {
     orgJsonVersion = "20150729"
     ehcacheVersion = "2.6.11"
     youTubeClientAPIVersion = "1.19.1"
+    youTubeServiceAPIVersion = "v3-rev153-1.21.0"
+    googleOauthClientVersion = "1.18.0-rc"
     quartzSchedulerVersion = "2.1.5"
     javaMailVersion = "1.4.6"
 }
@@ -68,6 +70,7 @@ dependencies {
     }
     compile "org.springframework.security:spring-security-core:$springSecurityVersion"
     compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    compile "org.springframework.mobile:spring-mobile-device"
 
     //Miscellaneous
     compile "org.codehaus.janino:janino:$janinoVersion"
@@ -99,10 +102,8 @@ dependencies {
 
     //YouTube API
     compile "com.google.api-client:google-api-client:$youTubeClientAPIVersion"
-    compile 'com.google.apis:google-api-services-youtube:v3-rev153-1.21.0'
-//    compile 'com.google.auth:google-auth-library-oauth2-http:0.3.1'
-//    compile 'com.google.apis:google-api-services-plus:v1-rev137-1.19.0'
+    compile "com.google.apis:google-api-services-youtube:$youTubeServiceAPIVersion"
+    compile "com.google.oauth-client:google-oauth-client-jetty:$googleOauthClientVersion"
 
 
-    compile 'com.google.oauth-client:google-oauth-client-jetty:1.18.0-rc'
 }

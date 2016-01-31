@@ -27,7 +27,10 @@ public class SchedulerService {
     private String playlistWidget;
 
     @Value("${scheduler.enabled}")
-    private boolean emailEnable;
+    private boolean schedulerEnabled;
+
+    @Value("${scheduler.email.enabled}")
+    private boolean schedulerEmailEnabled;
 
     @Value("${scheduler.cron}")
     private String cronSchedule;
@@ -45,7 +48,7 @@ public class SchedulerService {
 
     @Scheduled(cron = "${scheduler.cron}")
     public void updateWidget() throws Exception {
-        if (emailEnable) {
+        if (schedulerEnabled) {
 
             WidgetFeedReturn widgetFeedReturn = playlistService.getWidgetFeedInfo();
             if (widgetFeedReturn.getPlaylistCount() > 0
@@ -74,6 +77,8 @@ public class SchedulerService {
     }
 
     private void sendWidgetUpdateAlert(WidgetFeedReturn widgetFeedReturn) throws Exception {
+
+        if (!schedulerEmailEnabled) return;
 
         Map<String, Object> model = Maps.newHashMap();
 
