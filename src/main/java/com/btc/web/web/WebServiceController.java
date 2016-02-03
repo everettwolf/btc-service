@@ -19,7 +19,9 @@ import org.springframework.mobile.device.Device;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -110,6 +112,9 @@ public class WebServiceController {
 
             String comic = snippet.get("description").getAsString();
             String joke = snippet.get("title").getAsString();
+            String publishedAt = snippet.get("publishedAt").getAsString();
+
+            publishedAt = Date.from(ZonedDateTime.parse(publishedAt).toInstant()).toString();
 
             String thumb = snippet.get("thumbnails")
                     .getAsJsonObject()
@@ -130,7 +135,7 @@ public class WebServiceController {
             comicsGrid.setThumb(thumb);
             comicsGrid.setVideoId(videoId);
             comicsGrid.setTalent(talentAndDate.getTalent());
-            comicsGrid.setPublishedAt(talentAndDate.getDate());
+            comicsGrid.setPublishedAt(talentAndDate.getDate() == null ? publishedAt : talentAndDate.getDate());
             comicsGridList.add(comicsGrid);
         }
 

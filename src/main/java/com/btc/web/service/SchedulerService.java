@@ -54,7 +54,6 @@ public class SchedulerService {
             if (widgetFeedReturn.getPlaylistCount() > 0
                     && playlistService.insertPlaylistItem(playlistWidget, widgetFeedReturn.getVideoId())
                     && playlistService.deletePlaylistItem(widgetFeedReturn.getId())) {
-                //ws.updateAllPlaylists();
                 ws.updatePlaylist(playlistWidget);
                 widgetFeedReturn.setSuccess(true);
                 widgetFeedReturn.setMessage(new StringBuilder()

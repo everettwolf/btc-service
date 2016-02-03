@@ -3,9 +3,10 @@ package com.btc.web.service;
 import com.btc.web.model.Playlist;
 import com.btc.web.model.repository.PlaylistRepository;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.*;
+import com.google.api.services.youtube.model.PlaylistItem;
+import com.google.api.services.youtube.model.PlaylistItemSnippet;
+import com.google.api.services.youtube.model.ResourceId;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -21,10 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by Chris on 11/14/15.
@@ -51,7 +50,7 @@ public class PlaylistService {
     @Data
     public class TalentAndDate {
         String talent = "Unknown";
-        String date = "1/1/1900";
+        String date = null;
     }
 
     @PostConstruct
@@ -97,29 +96,6 @@ public class PlaylistService {
     public boolean insertPlaylistItem(String playlistId, String videoId) throws Exception {
 
         try {
-
-            YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet").setId(videoId);
-            VideoListResponse videoListResponse = listVideosRequest.execute();
-
-            List<Video> videoList = videoListResponse.getItems();
-            if (videoList.isEmpty()) {
-                logger.error("Can't find a video with ID {}", videoId);
-                return false;
-            }
-            Video video = videoList.get(0);
-
-            VideoRecordingDetails videoRecordingDetails = video.getRecordingDetails();
-            if (videoRecordingDetails == null) {
-                videoRecordingDetails = new VideoRecordingDetails();
-            }
-            Date date = Calendar.getInstance().getTime();
-
-            videoRecordingDetails.setRecordingDate(new DateTime(Calendar.getInstance().getTime(), TimeZone.getTimeZone("America/Los_Angeles")));
-            video.setRecordingDetails(videoRecordingDetails);
-
-            YouTube.Videos.Update updateVideosRequest = youtube.videos().update("snippet,recordingDetails", video);
-            Video videoResponse = updateVideosRequest.execute();
-            logger.info("Video date set to: {}", videoResponse.getRecordingDetails().getRecordingDate());
 
             ResourceId resourceId = new ResourceId();
             resourceId.setKind("youtube#video");
@@ -233,18 +209,29 @@ public class PlaylistService {
             JsonArray jsonArray = jsonObject.getAsJsonArray("items");
 
             TalentAndDate talentAndDate = new TalentAndDate();
-            talentAndDate.setTalent(jsonArray.get(0).getAsJsonObject()
-                    .get("snippet")
-                    .getAsJsonObject()
-                    .get("tags")
-                    .getAsJsonArray()
-                    .get(0)
-                    .getAsString());
-            talentAndDate.setDate(jsonArray.get(0).getAsJsonObject()
-                    .get("recordingDetails")
-                    .getAsJsonObject()
-                    .get("recordingDate")
-                    .getAsString());
+            try {
+                talentAndDate.setTalent(jsonArray.get(0).getAsJsonObject()
+                        .get("snippet")
+                        .getAsJsonObject()
+                        .get("tags")
+                        .getAsJsonArray()
+                        .get(0)
+                        .getAsString());
+            } catch (Exception e) {
+                logger.info("Couldn't get talent, leave as default");
+            }
+
+            try {
+                String recordedDate = jsonArray.get(0).getAsJsonObject()
+                        .get("recordingDetails")
+                        .getAsJsonObject()
+                        .get("recordingDate")
+                        .getAsString();
+                recordedDate = ZonedDateTime.parse(recordedDate).toInstant().toString();
+                talentAndDate.setDate(recordedDate);
+            } catch (Exception e) {
+                logger.info("Couldn't get date, leave as default");
+            }
 
             return talentAndDate;
 
