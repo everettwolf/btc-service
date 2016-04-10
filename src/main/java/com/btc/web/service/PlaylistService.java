@@ -38,9 +38,6 @@ public class PlaylistService {
 
     private YouTube youtube;
 
-    @Value("${playlist.widget_feed}")
-    private String playlistWidgetFeed;
-
     @Value("${yt.key}")
     private String youTubeKey;
 
@@ -138,10 +135,10 @@ public class PlaylistService {
         }
     }
 
-    public WidgetFeedReturn getWidgetFeedInfo() {
+    public WidgetFeedReturn getWidgetFeedInfo(String playlistFeed) {
 
         WidgetFeedReturn widgetFeedReturn = new WidgetFeedReturn();
-        JsonArray widgetFeedJsonArray = getPlaylistItemsByPlaylistId(playlistWidgetFeed)
+        JsonArray widgetFeedJsonArray = getPlaylistItemsByPlaylistId(playlistFeed)
                 .getAsJsonArray("items");
 
         widgetFeedReturn.setPlaylistCount(widgetFeedJsonArray.size());

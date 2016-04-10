@@ -22,18 +22,18 @@ public abstract class AbstractEmailNotification implements Notification {
     @Resource
     private Emailer emailer;
 
-    public void send(Map<String, Object> model, List<DataSource> attachments, Map<String, String> imageResources) throws MessagingException {
+    public void send(Map<String, Object> model, String mailTo, String subject, boolean emailEnabled, List<DataSource> attachments, Map<String, String> imageResources) throws MessagingException {
 
-        if (Strings.isNullOrEmpty(getMailTo())) {
+        if (Strings.isNullOrEmpty(mailTo)) {
             logger.info("No recipients, nothing will be sent");
             return;
         }
 
-        logNotification(model);
+        logNotification(model, mailTo, subject);
 
-        if (getEmailEnabled()) {
+        if (emailEnabled) {
             try {
-                emailer.sendMessage(getMailTo(), getSubject(model), getMessage(model), attachments, imageResources);
+                emailer.sendMessage(mailTo, getSubject(model, subject), getMessage(model), attachments, imageResources);
             } catch (IOException e) {
                 logger.error("Unable to send Notification", e);
             }
@@ -42,10 +42,10 @@ public abstract class AbstractEmailNotification implements Notification {
         }
     }
 
-    private void logNotification(Map<String, Object> model) {
+    private void logNotification(Map<String, Object> model, String mailTo, String subject) {
         logger.info("Email Notification Details:");
-        logger.info("To: {}", Arrays.toString(Emailer.parseAddressList(getMailTo())));
-        logger.info("Subject: {}", getSubject(model));
+        logger.info("To: {}", Arrays.toString(Emailer.parseAddressList(mailTo)));
+        logger.info("Subject: {}", getSubject(model, subject));
         try {
             logger.info("Body: \n{}", getMessage(model));
         } catch (IOException e1) {
@@ -63,9 +63,6 @@ public abstract class AbstractEmailNotification implements Notification {
 
     protected abstract String getMessage(Map<String, Object> model) throws IOException;
 
-    protected abstract String getSubject(Map<String, Object> model);
+    protected abstract String getSubject(Map<String, Object> model, String emailAlertSubject);
 
-    protected abstract String getMailTo();
-
-    protected abstract Boolean getEmailEnabled();
 }

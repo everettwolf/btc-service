@@ -23,7 +23,8 @@ public class TemplateService {
     public enum TemplateType {
         GRID("assets/header.html", "assets/grid_template.html", "assets/footer.html"),
         PLAYER("assets/header.html", "assets/grid_player_template.html", "assets/footer.html"),
-        HOME("assets/blank.html", "assets/home_template.html", "assets/blank.html");
+        HOME("assets/blank.html", "assets/home_template.html", "assets/blank.html"),
+        COMIX("assets/blank.html", "assets/comix_template.html", "assets/blank.html");
 
         private final String header;
         private final String content;

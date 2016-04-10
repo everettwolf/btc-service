@@ -1,7 +1,6 @@
 package com.btc.web.notification;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -15,15 +14,6 @@ import java.util.Map;
  */
 @Component
 public class EmailAlertNotification extends AbstractEmailNotification {
-
-    @Value("${scheduler.email.alert.subject}")
-    private String emailAlertSubject;
-
-    @Value("${scheduler.email.alert.recipient.list}")
-    private String emailAlertRecipientList;
-
-    @Value("${scheduler.email.enabled}")
-    private Boolean emailEnabled;
 
     private Resource emailTemplate = new ClassPathResource("META-INF/email/alert_message.html");
 
@@ -40,19 +30,8 @@ public class EmailAlertNotification extends AbstractEmailNotification {
     }
 
     @Override
-    public String getSubject(Map<String, Object> model) {
+    public String getSubject(Map<String, Object> model, String emailAlertSubject) {
         return Emailer.renderTemplate(emailAlertSubject, model);
     }
-
-    @Override
-    public String getMailTo() {
-        return emailAlertRecipientList;
-    }
-
-    @Override
-    public Boolean getEmailEnabled() {
-        return emailEnabled;
-    }
-
 
 }

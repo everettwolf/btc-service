@@ -26,14 +26,45 @@ public class SchedulerService {
     @Value("${playlist.widget}")
     private String playlistWidget;
 
-    @Value("${scheduler.enabled}")
-    private boolean schedulerEnabled;
+    @Value("${playlist.widget_feed}")
+    private String playlistWidgetFeed;
 
-    @Value("${scheduler.email.enabled}")
-    private boolean schedulerEmailEnabled;
+    @Value("${playlist.comix}")
+    private String playlistComix;
 
-    @Value("${scheduler.cron}")
-    private String cronSchedule;
+    @Value("${playlist.comix_feed}")
+    private String playlistComixFeed;
+
+    @Value("${widget_scheduler.enabled}")
+    private boolean widgetSchedulerEnabled;
+
+    @Value("${widget_scheduler.email.enabled}")
+    private boolean widgetSchedulerEmailEnabled;
+
+    @Value("${widget_scheduler.email.alert.subject}")
+    private String widgetEmailAlertSubject;
+
+    @Value("${widget_scheduler.email.alert.recipient.list}")
+    private String widgetEmailAlertRecipientList;
+
+    @Value("${widget_scheduler.cron}")
+    private String widgetCronSchedule;
+
+    @Value("${comix_scheduler.enabled}")
+    private boolean comixSchedulerEnabled;
+
+    @Value("${comix_scheduler.email.enabled}")
+    private boolean comixSchedulerEmailEnabled;
+
+    @Value("${comix_scheduler.email.alert.subject}")
+    private String comixEmailAlertSubject;
+
+    @Value("${comix_scheduler.email.alert.recipient.list}")
+    private String comixEmailAlertRecipientList;
+
+    @Value("${comix_scheduler.cron}")
+    private String comixCronSchedule;
+
 
     @Autowired
     private PlaylistService playlistService;
@@ -46,11 +77,11 @@ public class SchedulerService {
 
     private final static Logger logger = LoggerFactory.getLogger(SchedulerService.class);
 
-    @Scheduled(cron = "${scheduler.cron}")
+    @Scheduled(cron = "${widget_scheduler.cron}")
     public void updateWidget() throws Exception {
-        if (schedulerEnabled) {
+        if (widgetSchedulerEnabled) {
 
-            WidgetFeedReturn widgetFeedReturn = playlistService.getWidgetFeedInfo();
+            WidgetFeedReturn widgetFeedReturn = playlistService.getWidgetFeedInfo(playlistWidgetFeed);
             if (widgetFeedReturn.getPlaylistCount() > 0
                     && playlistService.insertPlaylistItem(playlistWidget, widgetFeedReturn.getVideoId())
                     && playlistService.deletePlaylistItem(widgetFeedReturn.getId())) {
@@ -71,13 +102,42 @@ public class SchedulerService {
                 widgetFeedReturn.setMessage("WIDGET WAS NOT UPDATED, PLEASE CHECK YOUR FEED");
                 logger.error("Widget was not updated");
             }
-            sendWidgetUpdateAlert(widgetFeedReturn);
+            sendWidgetUpdateAlert(widgetFeedReturn, widgetEmailAlertRecipientList, widgetEmailAlertSubject, widgetSchedulerEmailEnabled);
         }
     }
 
-    private void sendWidgetUpdateAlert(WidgetFeedReturn widgetFeedReturn) throws Exception {
+    @Scheduled(cron = "${comix_scheduler.cron}")
+    public void updateComix() throws Exception {
 
-        if (!schedulerEmailEnabled) return;
+        if (comixSchedulerEnabled) {
+            WidgetFeedReturn comixFeedReturn = playlistService.getWidgetFeedInfo(playlistComixFeed);
+            if (comixFeedReturn.getPlaylistCount() > 0
+                    && playlistService.insertPlaylistItem(playlistComix, comixFeedReturn.getVideoId())
+                    && playlistService.deletePlaylistItem(comixFeedReturn.getId())) {
+                ws.updatePlaylist(playlistComix);
+                comixFeedReturn.setSuccess(true);
+                comixFeedReturn.setMessage(new StringBuilder()
+                        .append("Comix updated with '")
+                        .append(comixFeedReturn.getVideoTitle())
+                        .append("', '")
+                        .append(comixFeedReturn.getVideoJoke())
+                        .append("'<br>")
+                        .append("There are ")
+                        .append(comixFeedReturn.getPlaylistCount() - 1)
+                        .append(" videos left to draw from.").toString());
+                logger.info("Comix updated");
+            } else {
+                comixFeedReturn.setSuccess(false);
+                comixFeedReturn.setMessage("COMIX WAS NOT UPDATED, PLEASE CHECK YOUR FEED");
+                logger.error("Comix was not updated");
+            }
+            sendWidgetUpdateAlert(comixFeedReturn, comixEmailAlertRecipientList, comixEmailAlertSubject, comixSchedulerEmailEnabled);
+        }
+    }
+
+    private void sendWidgetUpdateAlert(WidgetFeedReturn widgetFeedReturn, String mailTo, String subject, boolean emailEnabled) throws Exception {
+
+        if (!emailEnabled) return;
 
         Map<String, Object> model = Maps.newHashMap();
 
@@ -101,7 +161,7 @@ public class SchedulerService {
 
 
         try {
-            emailAlertNotification.send(model, null, imageResources);
+            emailAlertNotification.send(model, mailTo, subject, emailEnabled, null, imageResources);
         } catch (MessagingException e) {
             logger.error(e.getMessage());
         }
