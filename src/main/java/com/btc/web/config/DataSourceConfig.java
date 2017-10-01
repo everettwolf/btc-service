@@ -18,9 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-/**
- * Created by Eric on 9/12/14.
- */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
@@ -33,7 +30,7 @@ public class DataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[]{"com.btc.web"});
+        em.setPackagesToScan("com.btc.web");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaDialect(jpaDialect());
@@ -75,16 +72,14 @@ public class DataSourceConfig {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    Properties hibernateProperties() {
-        return new Properties() {
-            {
-                if ("true".equals(env.getProperty("db.auto"))) {
-                    setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-                }
-                setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
-                setProperty("hibernate.globally_quoted_identifiers", "true");
-            }
-        };
+    private Properties hibernateProperties() {
+        Properties properties = new Properties();
+        if ("true".equals(env.getProperty("db.auto"))) {
+            properties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        }
+        properties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        properties.put("hibernate.globally_quoted_identifiers", "true");
+        return properties;
     }
 
 }
