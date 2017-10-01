@@ -18,9 +18,11 @@ apply plugin: 'spring-boot'
 apply plugin: 'application'
 apply plugin: 'maven'
 
+mainClassName = "com.btc.web.Application"
+
+sourceCompatibility = 1.8
 version = '1.0'
 
-//noinspection GroovyMissingReturnStatement
 compileJava {
     allprojects {
         tasks.withType(JavaCompile) {
@@ -94,7 +96,7 @@ dependencies {
     compile "com.google.code.gson:gson:$gsonVersion"
     compile "org.json:json:$orgJsonVersion"
 
-    //Caching
+    //Cacheing
     compile "net.sf.ehcache:ehcache-core:$ehcacheVersion"
 
     //Lombok
